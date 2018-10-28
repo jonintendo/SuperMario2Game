@@ -1,0 +1,22 @@
+C:\Users\jonathan\Desktop\Desktop2\Faculdades\Desenvolvimento de jogos\prog3D\Trabalhos\MarioBros\Temp\bin\Debug\Assembly-CSharp-firstpass.dll
+C:\Users\jonathan\Desktop\Desktop2\Faculdades\Desenvolvimento de jogos\prog3D\Trabalhos\MarioBros\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb
+C:\Users\jonathan\Desktop\Desktop2\Faculdades\Desenvolvimento de jogos\prog3D\Trabalhos\MarioBros\Temp\bin\Debug\UnityEditor.dll
+C:\Users\jonathan\Desktop\Desktop2\Faculdades\Desenvolvimento de jogos\prog3D\Trabalhos\MarioBros\Temp\bin\Debug\UnityEngine.dll
+C:\Users\jonathan\Desktop\Desktop2\Faculdades\Desenvolvimento de jogos\prog3D\Trabalhos\MarioBros\Temp\bin\Debug\Mono.Cecil.dll
+C:\Users\jonathan\Desktop\Desktop2\Faculdades\Desenvolvimento de jogos\prog3D\Trabalhos\MarioBros\Temp\bin\Debug\nunit.framework.dll
+C:\Users\jonathan\Desktop\Desktop2\Faculdades\Desenvolvimento de jogos\prog3D\Trabalhos\MarioBros\Temp\bin\Debug\Unity.DataContract.dll
+C:\Users\jonathan\Desktop\Desktop2\Faculdades\Desenvolvimento de jogos\prog3D\Trabalhos\MarioBros\Temp\bin\Debug\ICSharpCode.NRefactory.dll
+C:\Users\jonathan\Desktop\Desktop2\Faculdades\Desenvolvimento de jogos\prog3D\Trabalhos\MarioBros\obj\Debug\Assembly-CSharp-firstpass-vs.csprojResolveAssemblyReference.cache
+C:\Users\jonathan\Desktop\Desktop2\Faculdades\Desenvolvimento de jogos\prog3D\Trabalhos\MarioBros\obj\Debug\Assembly-CSharp-firstpass.dll
+C:\Users\jonathan\Desktop\Desktop2\Faculdades\Desenvolvimento de jogos\prog3D\Trabalhos\MarioBros\obj\Debug\Assembly-CSharp-firstpass.pdb
+C:\Users\jonathan\Desktop\Desktop2\Faculdades\Desenvolvimento de jogos\prog3D\Trabalhos\MarioBros 2\Temp\bin\Debug\Assembly-CSharp-firstpass.dll
+C:\Users\jonathan\Desktop\Desktop2\Faculdades\Desenvolvimento de jogos\prog3D\Trabalhos\MarioBros 2\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb
+C:\Users\jonathan\Desktop\Desktop2\Faculdades\Desenvolvimento de jogos\prog3D\Trabalhos\MarioBros 2\Temp\bin\Debug\UnityEditor.dll
+C:\Users\jonathan\Desktop\Desktop2\Faculdades\Desenvolvimento de jogos\prog3D\Trabalhos\MarioBros 2\Temp\bin\Debug\UnityEngine.dll
+C:\Users\jonathan\Desktop\Desktop2\Faculdades\Desenvolvimento de jogos\prog3D\Trabalhos\MarioBros 2\Temp\bin\Debug\Mono.Cecil.dll
+C:\Users\jonathan\Desktop\Desktop2\Faculdades\Desenvolvimento de jogos\prog3D\Trabalhos\MarioBros 2\Temp\bin\Debug\nunit.framework.dll
+C:\Users\jonathan\Desktop\Desktop2\Faculdades\Desenvolvimento de jogos\prog3D\Trabalhos\MarioBros 2\Temp\bin\Debug\Unity.DataContract.dll
+C:\Users\jonathan\Desktop\Desktop2\Faculdades\Desenvolvimento de jogos\prog3D\Trabalhos\MarioBros 2\Temp\bin\Debug\ICSharpCode.NRefactory.dll
+C:\Users\jonathan\Desktop\Desktop2\Faculdades\Desenvolvimento de jogos\prog3D\Trabalhos\MarioBros 2\obj\Debug\Assembly-CSharp-firstpass-vs.csprojResolveAssemblyReference.cache
+C:\Users\jonathan\Desktop\Desktop2\Faculdades\Desenvolvimento de jogos\prog3D\Trabalhos\MarioBros 2\obj\Debug\Assembly-CSharp-firstpass.dll
+C:\Users\jonathan\Desktop\Desktop2\Faculdades\Desenvolvimento de jogos\prog3D\Trabalhos\MarioBros 2\obj\Debug\Assembly-CSharp-firstpass.pdb
