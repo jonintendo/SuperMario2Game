@@ -181,7 +181,7 @@ public class PlayerActionOnLine : MonoBehaviour
     {
 
 
-        if (info.sender == networkView.owner && !networkView.isMine)
+        if (info.sender == GetComponent<NetworkView>().owner && !GetComponent<NetworkView>().isMine)
         {
             // this.name = name;
             this.tag = tag;
@@ -204,7 +204,7 @@ public class PlayerActionOnLine : MonoBehaviour
 
 
 
-        if (info.sender == networkView.owner && !networkView.isMine)
+        if (info.sender == GetComponent<NetworkView>().owner && !GetComponent<NetworkView>().isMine)
         {
 
             Vector3 placarPosition = new Vector3(0, 0, 0);
@@ -284,7 +284,7 @@ public class PlayerActionOnLine : MonoBehaviour
 
 
 
-        if (!networkView.isMine)
+        if (!GetComponent<NetworkView>().isMine)
         {
             desativaoControles(true);
             desativaCameraScripts();
@@ -375,7 +375,7 @@ public class PlayerActionOnLine : MonoBehaviour
         SetRoupa(Roupa);
 
         // networkView.RPC("TellAllOurPlacar", RPCMode.All, this.lifes, this.coins);
-        networkView.RPC("TellAllOurName", RPCMode.All, "", this.tag, Roupa);
+        GetComponent<NetworkView>().RPC("TellAllOurName", RPCMode.All, "", this.tag, Roupa);
 
     }
 
@@ -383,7 +383,7 @@ public class PlayerActionOnLine : MonoBehaviour
     {
 
 
-        if (networkView.isMine)
+        if (GetComponent<NetworkView>().isMine)
         {
             Network.Destroy(placar);
             if (menu != null)
@@ -587,7 +587,7 @@ public class PlayerActionOnLine : MonoBehaviour
 
 
 
-        if (networkView.isMine)
+        if (GetComponent<NetworkView>().isMine)
         {
             // networkView.RPC("TellAllOurName", RPCMode.All, "", this.tag, Roupa);
 
@@ -611,7 +611,7 @@ public class PlayerActionOnLine : MonoBehaviour
                             invencivel = false;
                             star = false;
 
-                            audio.Stop();
+                            GetComponent<AudioSource>().Stop();
 
                             MenuGUI menugui = menu.GetComponent<MenuGUI>();
                             Audios audios = menu.GetComponent<Audios>();
@@ -635,7 +635,7 @@ public class PlayerActionOnLine : MonoBehaviour
 
                         //ee.tag=this.name;
 
-                        audio.PlayOneShot(fireballs);
+                        GetComponent<AudioSource>().PlayOneShot(fireballs);
                         //PlayerAnimation.pistolshoting = true;
                         //attribs.ammo9mm--;
 
@@ -668,10 +668,10 @@ public class PlayerActionOnLine : MonoBehaviour
 
 
                             if (cogumelo || fireflower)
-                                audio.PlayOneShot(puloalto);
+                                GetComponent<AudioSource>().PlayOneShot(puloalto);
                             else
                             {
-                                audio.PlayOneShot(pulo);
+                                GetComponent<AudioSource>().PlayOneShot(pulo);
                             }
 
                         }
@@ -785,7 +785,7 @@ public class PlayerActionOnLine : MonoBehaviour
 
                         //ee.tag=this.name;
 
-                        audio.PlayOneShot(fireballs);
+                        GetComponent<AudioSource>().PlayOneShot(fireballs);
                         //PlayerAnimation.pistolshoting = true;
                         //attribs.ammo9mm--;
 
@@ -818,10 +818,10 @@ public class PlayerActionOnLine : MonoBehaviour
 
 
                             if (cogumelo || fireflower)
-                                audio.PlayOneShot(puloalto);
+                                GetComponent<AudioSource>().PlayOneShot(puloalto);
                             else
                             {
-                                audio.PlayOneShot(pulo);
+                                GetComponent<AudioSource>().PlayOneShot(pulo);
                             }
 
                         }
@@ -945,7 +945,7 @@ public class PlayerActionOnLine : MonoBehaviour
             if (scriptj.name == "Main Camera")
             {
                 // scriptj.enabled = false;
-                scriptj.camera.enabled = false;
+                scriptj.GetComponent<Camera>().enabled = false;
 
                 scriptj.GetComponent<AudioListener>().enabled = false;
 
@@ -975,7 +975,7 @@ public class PlayerActionOnLine : MonoBehaviour
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
 
-        if (networkView.isMine)
+        if (GetComponent<NetworkView>().isMine)
         {
             if (menuRede.gameMode == GameModeOnLine.takeflag)
             {
@@ -993,7 +993,7 @@ public class PlayerActionOnLine : MonoBehaviour
 
 
                       
-                            audio.PlayOneShot(bump);
+                            GetComponent<AudioSource>().PlayOneShot(bump);
                            
                             Invencivel(1);
 
@@ -1038,7 +1038,7 @@ public class PlayerActionOnLine : MonoBehaviour
                 if (hit.gameObject.tag == "Cogumelo")
                 {
                    
-                    audio.PlayOneShot(cogumelos);
+                    GetComponent<AudioSource>().PlayOneShot(cogumelos);
                     SetPlacar(150, lifes, flag);
                     Network.Destroy(hit.gameObject);
 
@@ -1048,7 +1048,7 @@ public class PlayerActionOnLine : MonoBehaviour
                 if (hit.gameObject.tag == "Flor")
                 {
                    
-                    audio.PlayOneShot(cogumelos);
+                    GetComponent<AudioSource>().PlayOneShot(cogumelos);
                     SetPlacar(200, this.lifes, flag);
                     Network.Destroy(hit.gameObject);
                 }
@@ -1056,7 +1056,7 @@ public class PlayerActionOnLine : MonoBehaviour
 
                 if (hit.gameObject.name == "Moeda")
                 {
-                    audio.PlayOneShot(moeda);
+                    GetComponent<AudioSource>().PlayOneShot(moeda);
                     SetPlacar(100, this.lifes, flag);
                     Network.Destroy(hit.gameObject);
 
@@ -1065,7 +1065,7 @@ public class PlayerActionOnLine : MonoBehaviour
                 if (hit.gameObject.tag == "Fireball")
                 {
 
-                    audio.PlayOneShot(bump);
+                    GetComponent<AudioSource>().PlayOneShot(bump);
                     SetPlacar(-100, this.lifes, flag);
                     Network.Destroy(hit.gameObject);
 
@@ -1080,13 +1080,13 @@ public class PlayerActionOnLine : MonoBehaviour
                     audios.MuteAudio(menugui.audioChosen, true);
 
                     if (menuRede.audioChosen == 0)
-                        audio.PlayOneShot(estrela);
+                        GetComponent<AudioSource>().PlayOneShot(estrela);
                     else
                         if (menuRede.audioChosen == 2)
-                            audio.PlayOneShot(estrelaguitar);
+                            GetComponent<AudioSource>().PlayOneShot(estrelaguitar);
                         else
                             if (menuRede.audioChosen == 1)
-                                audio.PlayOneShot(estrelabatery);
+                                GetComponent<AudioSource>().PlayOneShot(estrelabatery);
                     Invencivel(11);
                     star = true;
                     Network.Destroy(hit.gameObject);
@@ -1113,7 +1113,7 @@ public class PlayerActionOnLine : MonoBehaviour
                 else
                     if (hit.gameObject.tag == "enemy" && !invencivel)
                     {
-                        audio.PlayOneShot(bump);
+                        GetComponent<AudioSource>().PlayOneShot(bump);
                            
                         Invencivel(1);
                         SetPlacar(-100, lifes, flag);
@@ -1152,7 +1152,7 @@ public class PlayerActionOnLine : MonoBehaviour
                     //GetComponent<CharacterMotor>().jumping.extraHeight = 10;
                     SetPlacar(150, lifes, flag);
 
-                    audio.PlayOneShot(cogumelos);
+                    GetComponent<AudioSource>().PlayOneShot(cogumelos);
                     
                     Network.Destroy(hit.gameObject);
 
@@ -1165,7 +1165,7 @@ public class PlayerActionOnLine : MonoBehaviour
 
                     SetPlacar(200, lifes, flag);
 
-                    audio.PlayOneShot(cogumelos);
+                    GetComponent<AudioSource>().PlayOneShot(cogumelos);
                   
                     Network.Destroy(hit.gameObject);
                 }
@@ -1173,7 +1173,7 @@ public class PlayerActionOnLine : MonoBehaviour
 
                 if (hit.gameObject.name == "Moeda")
                 {
-                    audio.PlayOneShot(moeda);
+                    GetComponent<AudioSource>().PlayOneShot(moeda);
                     SetPlacar(100, lifes, flag);
                     Network.Destroy(hit.gameObject);
 
@@ -1182,7 +1182,7 @@ public class PlayerActionOnLine : MonoBehaviour
                 if (hit.gameObject.tag == "Fireball")
                 {
 
-                    audio.PlayOneShot(bump);
+                    GetComponent<AudioSource>().PlayOneShot(bump);
                     SetPlacar(-100, this.lifes, flag);
                     Network.Destroy(hit.gameObject);
 
@@ -1198,13 +1198,13 @@ public class PlayerActionOnLine : MonoBehaviour
                     audios.MuteAudio(menugui.audioChosen, true);
 
                     if (menuRede.audioChosen == 0)
-                        audio.PlayOneShot(estrela);
+                        GetComponent<AudioSource>().PlayOneShot(estrela);
                     else
                         if (menuRede.audioChosen == 2)
-                            audio.PlayOneShot(estrelaguitar);
+                            GetComponent<AudioSource>().PlayOneShot(estrelaguitar);
                         else
                             if (menuRede.audioChosen == 1)
-                                audio.PlayOneShot(estrelabatery);
+                                GetComponent<AudioSource>().PlayOneShot(estrelabatery);
                             
                                 Invencivel(11);
                     star = true;
@@ -1305,16 +1305,16 @@ public class PlayerActionOnLine : MonoBehaviour
                     ff.Play("Armature|MyWalk", PlayMode.StopAll);
                 }
 
-            if (star && !audio.isPlaying)
+            if (star && !GetComponent<AudioSource>().isPlaying)
             {
                 if (menuRede.audioChosen == 0)
-                    audio.PlayOneShot(estrela);
+                    GetComponent<AudioSource>().PlayOneShot(estrela);
                 else
                     if (menuRede.audioChosen == 2)
-                        audio.PlayOneShot(estrelaguitar);
+                        GetComponent<AudioSource>().PlayOneShot(estrelaguitar);
                     else
                         if (menuRede.audioChosen == 1)
-                            audio.PlayOneShot(estrelabatery);
+                            GetComponent<AudioSource>().PlayOneShot(estrelabatery);
             }
 
 

@@ -80,8 +80,8 @@ public class Bloco : MonoBehaviour
                
                 if (this.gameObject.tag == "moeda")
                 {
-                    audio.PlayOneShot(moeda);
-                    this.gameObject.renderer.material.mainTexture = blocoUsado;
+                    GetComponent<AudioSource>().PlayOneShot(moeda);
+                    this.gameObject.GetComponent<Renderer>().material.mainTexture = blocoUsado;
                   
 
                 }
@@ -95,14 +95,14 @@ public class Bloco : MonoBehaviour
                 else if (this.gameObject.tag == "bloco")
                 {
                     Debug.Log("Player Colidiu");
-                    audio.PlayOneShot(destruction);
+                    GetComponent<AudioSource>().PlayOneShot(destruction);
                     Destroy(this.gameObject, delayDie);
                 }
                 else if (this.gameObject.tag == "cogumelo")
                 {
 
-                    audio.PlayOneShot(item);
-                    this.gameObject.renderer.material.mainTexture = blocoUsado;
+                    GetComponent<AudioSource>().PlayOneShot(item);
+                    this.gameObject.GetComponent<Renderer>().material.mainTexture = blocoUsado;
                   
                     CreateItem();
 
@@ -110,8 +110,8 @@ public class Bloco : MonoBehaviour
                 else if (this.gameObject.tag == "flor")
                 {
 
-                    audio.PlayOneShot(item);
-                    this.gameObject.renderer.material.mainTexture = blocoUsado;
+                    GetComponent<AudioSource>().PlayOneShot(item);
+                    this.gameObject.GetComponent<Renderer>().material.mainTexture = blocoUsado;
                    
                     CreateItem();
                 }

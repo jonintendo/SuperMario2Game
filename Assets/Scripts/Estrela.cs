@@ -7,7 +7,7 @@ public class Estrela : MonoBehaviour {
 
     
 	void Start () {
-        rigidbody.AddForce(new Vector3(-1,1,0) * 400);	
+        GetComponent<Rigidbody>().AddForce(new Vector3(-1,1,0) * 400);	
 	}
 	
 	// Update is called once per frame
@@ -20,7 +20,7 @@ public class Estrela : MonoBehaviour {
 
         if (!collision.transform.tag.Contains("layer"))
         {
-            rigidbody.AddForce(new Vector3(1, 0, 0) * 400);	
+            GetComponent<Rigidbody>().AddForce(new Vector3(1, 0, 0) * 400);	
 
         }
     }

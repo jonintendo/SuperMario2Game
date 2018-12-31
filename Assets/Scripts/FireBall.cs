@@ -13,7 +13,7 @@ public class FireBall : MonoBehaviour {
 
 	void Start ()
 	{
-        rigidbody.AddForce(transform.forward * 1000);	
+        GetComponent<Rigidbody>().AddForce(transform.forward * 1000);	
 	
 	}
 

@@ -17,13 +17,13 @@ public class FireBallOnLine : MonoBehaviour
 
     void Start()
     {
-        rigidbody.AddForce(transform.forward * 1000);
+        GetComponent<Rigidbody>().AddForce(transform.forward * 1000);
 
     }
 
     void Update()
     {
-        if (networkView.isMine)
+        if (GetComponent<NetworkView>().isMine)
         {
             //this.transform.position += this.transform.forward/7 ;
 
@@ -50,7 +50,7 @@ public class FireBallOnLine : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (networkView.isMine)
+        if (GetComponent<NetworkView>().isMine)
         {
 
             if (!collision.gameObject.tag.Equals("chao"))
@@ -85,13 +85,13 @@ public class FireBallOnLine : MonoBehaviour
         Vector3 syncPosition = Vector3.zero;
         if (stream.isWriting)
         {
-            syncPosition = rigidbody.position;
+            syncPosition = GetComponent<Rigidbody>().position;
             stream.Serialize(ref syncPosition);
         }
         else
         {
             stream.Serialize(ref syncPosition);
-            rigidbody.position = syncPosition;
+            GetComponent<Rigidbody>().position = syncPosition;
         }
     }
 }

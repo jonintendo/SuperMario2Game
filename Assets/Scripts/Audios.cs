@@ -68,7 +68,7 @@ public class Audios : MonoBehaviour
         {
 
             StopAudio(menugui.audioChosen);
-            audio.PlayOneShot(dies);
+            GetComponent<AudioSource>().PlayOneShot(dies);
 
           
         }
@@ -140,7 +140,7 @@ public class Audios : MonoBehaviour
 
                
                 MuteAudio(menugui.audioChosen, true);
-                audio.PlayOneShot(pausas);
+                GetComponent<AudioSource>().PlayOneShot(pausas);
 
               
 
@@ -153,7 +153,7 @@ public class Audios : MonoBehaviour
             {
 
                 MuteAudio(menugui.audioChosen, false);
-                audio.PlayOneShot(pausas);
+                GetComponent<AudioSource>().PlayOneShot(pausas);
                
             }
         }
@@ -186,7 +186,7 @@ public class Audios : MonoBehaviour
 
         if (i == 0)
         {
-            audio.Stop();
+            GetComponent<AudioSource>().Stop();
         }
         else
         {

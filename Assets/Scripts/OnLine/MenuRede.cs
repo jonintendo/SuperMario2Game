@@ -485,7 +485,7 @@ public class MenuRede : MonoBehaviour
                 if (GUILayout.Button("Iniciar jogo"))
                 {
 
-                    networkView.RPC("Entrarnojogo", RPCMode.All, playername);
+                    GetComponent<NetworkView>().RPC("Entrarnojogo", RPCMode.All, playername);
 
 
                 }
@@ -502,7 +502,7 @@ public class MenuRede : MonoBehaviour
             {
                 if (GUILayout.Button("Sair do jogo"))
                 {
-                    networkView.RPC("Sairdojogo", RPCMode.All, playername);
+                    GetComponent<NetworkView>().RPC("Sairdojogo", RPCMode.All, playername);
 
                 }
             }
@@ -706,7 +706,7 @@ public class MenuRede : MonoBehaviour
     public void iniciarJogoTimeAtack()
     {
 
-        networkView.RPC("IniciarTimeAtack", RPCMode.All, playername);
+        GetComponent<NetworkView>().RPC("IniciarTimeAtack", RPCMode.All, playername);
 
 
         this.gameObject.GetComponentInChildren<SERVER>().IniciarTimeAtackServer();
@@ -718,7 +718,7 @@ public class MenuRede : MonoBehaviour
 
     public void SetJogoTimeAtack(NetworkMessageInfo info)
     {
-        networkView.RPC("SetTimeAtack", RPCMode.All, timer);
+        GetComponent<NetworkView>().RPC("SetTimeAtack", RPCMode.All, timer);
 
     }
 
@@ -759,7 +759,7 @@ public class MenuRede : MonoBehaviour
     void ChatWindow()
     {
 
-        if (Event.current.type == EventType.keyDown && char.Equals(Event.current.character, '\n') && inputField.Length <= 0)
+        if (Event.current.type == EventType.KeyDown && char.Equals(Event.current.character, '\n') && inputField.Length <= 0)
         {
             if (lastUnfocusTime + 0.25 < Time.time)
             {
@@ -806,7 +806,7 @@ public class MenuRede : MonoBehaviour
         // End the scrollview we began above.
         GUILayout.EndScrollView();
 
-        if (Event.current.type == EventType.keyDown && Event.current.keyCode == KeyCode.Return && inputField.Length > 0)
+        if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Return && inputField.Length > 0)
         {
 
             string destinatario = inputField.Split(':')[0];
@@ -846,7 +846,7 @@ public class MenuRede : MonoBehaviour
     {
 
 
-        networkView.RPC("ReceiveStatus", RPCMode.All, coin, life, flags,playername);//so mandando pra todos pq se nao o server nao recebe quando eh ele que manda, era so pra ir proserver
+        GetComponent<NetworkView>().RPC("ReceiveStatus", RPCMode.All, coin, life, flags,playername);//so mandando pra todos pq se nao o server nao recebe quando eh ele que manda, era so pra ir proserver
 
 
     }
@@ -857,7 +857,7 @@ public class MenuRede : MonoBehaviour
 
         msg = msg.Replace("\n", "");
 
-        networkView.RPC("ComandodoJogo", RPCMode.Server, msg, playername);
+        GetComponent<NetworkView>().RPC("ComandodoJogo", RPCMode.Server, msg, playername);
         inputField = ""; //Clear line
         //GUI.UnfocusWindow ();//Deselect chat
         lastUnfocusTime = Time.time;
@@ -869,7 +869,7 @@ public class MenuRede : MonoBehaviour
     {
 
         msg = msg.Replace("\n", "");
-        networkView.RPC("ApplyChat", RPCMode.All, playername, msg, playerdest);
+        GetComponent<NetworkView>().RPC("ApplyChat", RPCMode.All, playername, msg, playerdest);
 
         inputField = ""; //Clear line
         //GUI.UnfocusWindow ();//Deselect chat
@@ -880,7 +880,7 @@ public class MenuRede : MonoBehaviour
 
     public void ReiniciarJogoOnline()
     {
-        networkView.RPC("ReiniciarJogo", RPCMode.All);
+        GetComponent<NetworkView>().RPC("ReiniciarJogo", RPCMode.All);
     }
 
 
@@ -914,7 +914,7 @@ public class MenuRede : MonoBehaviour
 
     public void SetStageModeServer(string stage, string playerdestino, string gamemode)
     {
-        networkView.RPC("SetStageMode", RPCMode.All, stage, playerdestino, gamemode);
+        GetComponent<NetworkView>().RPC("SetStageMode", RPCMode.All, stage, playerdestino, gamemode);
     }
 
 
@@ -938,7 +938,7 @@ public class MenuRede : MonoBehaviour
 
     public void SetTagServer(string tagPlayer, string playerdestino)
     {
-        networkView.RPC("SetTag", RPCMode.All, tagPlayer, playerdestino);
+        GetComponent<NetworkView>().RPC("SetTag", RPCMode.All, tagPlayer, playerdestino);
     }
 
 
@@ -958,7 +958,7 @@ public class MenuRede : MonoBehaviour
     public void LeaveGameServer(string playerdestino)
     {
 
-        networkView.RPC("LeaveGame", RPCMode.All, playerdestino);
+        GetComponent<NetworkView>().RPC("LeaveGame", RPCMode.All, playerdestino);
     }
 
 
@@ -1038,12 +1038,12 @@ public class MenuRede : MonoBehaviour
         {
             Destroy(fireballToDestroy);
         }
-        Network.RemoveRPCs(networkView.owner);
+        Network.RemoveRPCs(GetComponent<NetworkView>().owner);
         jogando = false;
 
 
         menugui.GetComponent<AudioListener>().enabled = true;
-        menugui.camera.enabled = true;
+        menugui.GetComponent<Camera>().enabled = true;
 
     }
 

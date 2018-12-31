@@ -196,7 +196,7 @@ public class PlayerAction : MonoBehaviour
                     invencivel = false;
                     star = false;
 
-                    audio.Stop();
+                    GetComponent<AudioSource>().Stop();
 
                     MenuGUI menugui = menu.GetComponent<MenuGUI>();
                     Audios audios = menu.GetComponent<Audios>();
@@ -218,7 +218,7 @@ public class PlayerAction : MonoBehaviour
                 GameObject ee = (GameObject)Instantiate(fireball, fireballout.transform.position, fireballout.transform.rotation);
                 ee.name = this.tag;
                 //ee.tag=this.name;
-                audio.PlayOneShot(fireballs);
+                GetComponent<AudioSource>().PlayOneShot(fireballs);
                 //PlayerAnimation.pistolshoting = true;
                 //attribs.ammo9mm--;
 
@@ -251,10 +251,10 @@ public class PlayerAction : MonoBehaviour
 
 
                     if (cogumelo || fireflower)
-                        audio.PlayOneShot(puloalto);
+                        GetComponent<AudioSource>().PlayOneShot(puloalto);
                     else
                     {
-                        audio.PlayOneShot(pulo);
+                        GetComponent<AudioSource>().PlayOneShot(pulo);
                     }
 
                 }
@@ -410,7 +410,7 @@ public class PlayerAction : MonoBehaviour
 
             if (fireflower)
             {
-                audio.PlayOneShot(bump);
+                GetComponent<AudioSource>().PlayOneShot(bump);
                 fireflower = false;
                 cogumelo = true;
                 Invencivel(1);
@@ -418,7 +418,7 @@ public class PlayerAction : MonoBehaviour
             }
             else if (cogumelo)
             {
-                audio.PlayOneShot(bump);
+                GetComponent<AudioSource>().PlayOneShot(bump);
                 cogumelo = false;
                 Invencivel(1);
                 GetComponent<CharacterMotor>().jumping.extraHeight = 1;
@@ -467,7 +467,7 @@ public class PlayerAction : MonoBehaviour
         if (hit.gameObject.tag == "Cogumelo")
         {
             GetComponent<CharacterMotor>().jumping.extraHeight = 10;
-            audio.PlayOneShot(cogumelos);
+            GetComponent<AudioSource>().PlayOneShot(cogumelos);
             cogumelo = true;
             Destroy(hit.gameObject);
 
@@ -477,7 +477,7 @@ public class PlayerAction : MonoBehaviour
         if (hit.gameObject.tag == "Flor")
         {
             GetComponent<CharacterMotor>().jumping.extraHeight = 10;
-            audio.PlayOneShot(cogumelos);
+            GetComponent<AudioSource>().PlayOneShot(cogumelos);
             cogumelo = true;
             fireflower = true;
             Destroy(hit.gameObject);
@@ -486,7 +486,7 @@ public class PlayerAction : MonoBehaviour
 
         if (hit.gameObject.name == "Moeda")
         {
-            audio.PlayOneShot(moeda);
+            GetComponent<AudioSource>().PlayOneShot(moeda);
             coins += 100;
             Destroy(hit.gameObject);
 
@@ -502,13 +502,13 @@ public class PlayerAction : MonoBehaviour
               audios.MuteAudio(menugui.audioChosen, true);
 
             if (menugui.audioChosen == 0)
-                audio.PlayOneShot(estrela);
+                GetComponent<AudioSource>().PlayOneShot(estrela);
             else
                 if (menugui.audioChosen == 2)
-                    audio.PlayOneShot(estrelaguitar);
+                    GetComponent<AudioSource>().PlayOneShot(estrelaguitar);
                 else
                     if (menugui.audioChosen == 1)
-                        audio.PlayOneShot(estrelabatery);
+                        GetComponent<AudioSource>().PlayOneShot(estrelabatery);
             Invencivel(11);
             star = true;
             Destroy(hit.gameObject);

@@ -66,7 +66,7 @@ public class EnemysOnLine : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
 
-        if (networkView.isMine)
+        if (GetComponent<NetworkView>().isMine)
         {
             //if (!collision.transform.tag.Equals("chao"))
             //{
@@ -82,7 +82,7 @@ public class EnemysOnLine : MonoBehaviour
                 //playeraction.coins += 100;
 
 
-                audio.PlayOneShot(smashenemy);
+                GetComponent<AudioSource>().PlayOneShot(smashenemy);
                 //this.gameObject.GetComponent<Collider>().enabled = false;
                 Network.Destroy(this.gameObject);
             }
@@ -96,7 +96,7 @@ public class EnemysOnLine : MonoBehaviour
 
 
                 // Destroy(collision.gameObject);
-                audio.PlayOneShot(smashenemy);
+                GetComponent<AudioSource>().PlayOneShot(smashenemy);
                 //Network.Destroy(this.gameObject,0.50f);
                 Network.Destroy(this.gameObject);
 
@@ -108,7 +108,7 @@ public class EnemysOnLine : MonoBehaviour
                 PlayerActionOnLine playerstar = collision.transform.GetComponent<PlayerActionOnLine>();
                 if (playerstar.star)
                 {
-                    audio.PlayOneShot(smashenemy);
+                    GetComponent<AudioSource>().PlayOneShot(smashenemy);
                 }
             }
             else
@@ -134,13 +134,13 @@ public class EnemysOnLine : MonoBehaviour
 
         if (stream.isWriting)
         {
-            syncPosition = rigidbody.position;
+            syncPosition = GetComponent<Rigidbody>().position;
             stream.Serialize(ref syncPosition);
         }
         else
         {
             stream.Serialize(ref syncPosition);
-            rigidbody.position = syncPosition;
+            GetComponent<Rigidbody>().position = syncPosition;
         }
     }
 

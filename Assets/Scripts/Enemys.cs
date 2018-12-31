@@ -81,7 +81,7 @@ public class Enemys : MonoBehaviour
             //playeraction.coins += 100;
 
 
-            audio.PlayOneShot(smashenemy);
+            GetComponent<AudioSource>().PlayOneShot(smashenemy);
             this.gameObject.GetComponent<Collider>().enabled = false;
         }
         else
@@ -95,7 +95,7 @@ public class Enemys : MonoBehaviour
 
 
                 // Destroy(collision.gameObject);
-                audio.PlayOneShot(smashenemy);
+                GetComponent<AudioSource>().PlayOneShot(smashenemy);
                 Destroy(this.gameObject, 0.50f);
 
             }
@@ -106,7 +106,7 @@ public class Enemys : MonoBehaviour
                     PlayerAction playerstar = collision.transform.GetComponent<PlayerAction>();
                     if (playerstar.star)
                     {
-                        audio.PlayOneShot(smashenemy);
+                        GetComponent<AudioSource>().PlayOneShot(smashenemy);
                     }
                 }
                 else

@@ -85,8 +85,8 @@ public class BlocoOnLine : MonoBehaviour
                
                 if (this.gameObject.tag == "moeda")
                 {
-                    audio.PlayOneShot(moeda);
-                    this.gameObject.renderer.material.mainTexture = blocoUsado;
+                    GetComponent<AudioSource>().PlayOneShot(moeda);
+                    this.gameObject.GetComponent<Renderer>().material.mainTexture = blocoUsado;
                   
 
                 }
@@ -100,14 +100,14 @@ public class BlocoOnLine : MonoBehaviour
                 else if (this.gameObject.tag == "bloco")
                 {
                     Debug.Log("Player Colidiu");
-                    audio.PlayOneShot(destruction);
+                    GetComponent<AudioSource>().PlayOneShot(destruction);
                     Destroy(this.gameObject, delayDie);
                 }
                 else if (this.gameObject.tag == "cogumelo")
                 {
 
-                    audio.PlayOneShot(item);
-                    this.gameObject.renderer.material.mainTexture = blocoUsado;
+                    GetComponent<AudioSource>().PlayOneShot(item);
+                    this.gameObject.GetComponent<Renderer>().material.mainTexture = blocoUsado;
                   
                     CreateItem();
 
@@ -115,16 +115,16 @@ public class BlocoOnLine : MonoBehaviour
                 else if (this.gameObject.tag == "flor")
                 {
 
-                    audio.PlayOneShot(item);
-                    this.gameObject.renderer.material.mainTexture = blocoUsado;
+                    GetComponent<AudioSource>().PlayOneShot(item);
+                    this.gameObject.GetComponent<Renderer>().material.mainTexture = blocoUsado;
                    
                     CreateItem();
                 }
                 else if (this.gameObject.tag == "estrela")
                 {
 
-                    audio.PlayOneShot(item);
-                    this.gameObject.renderer.material.mainTexture = blocoUsado;
+                    GetComponent<AudioSource>().PlayOneShot(item);
+                    this.gameObject.GetComponent<Renderer>().material.mainTexture = blocoUsado;
 
                     CreateItem();
                 }

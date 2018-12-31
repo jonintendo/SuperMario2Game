@@ -30,7 +30,7 @@ public class CLIENT : MonoBehaviour
 
       
 
-        networkView.RPC("TellServerOurName", RPCMode.Server, menuRede.playername);
+        GetComponent<NetworkView>().RPC("TellServerOurName", RPCMode.Server, menuRede.playername);
 
 
 
