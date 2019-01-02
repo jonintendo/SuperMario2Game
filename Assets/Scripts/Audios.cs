@@ -1,6 +1,6 @@
 ﻿
 
- using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 
@@ -8,9 +8,6 @@ using System.Collections;
 
 public class Audios : MonoBehaviour
 {
-
-
-  
 
     public GameObject menu;
     public Manager gerente;
@@ -24,8 +21,7 @@ public class Audios : MonoBehaviour
     public AudioClip gameOvers;
 
 
-      //int audioChosen;
-      //int stage;
+
 
     void Awake()
     {
@@ -37,192 +33,225 @@ public class Audios : MonoBehaviour
 
         menugui = menu.GetComponent<MenuGUI>();
 
+
+
     }
     void Start()
     {
 
         // Player1 = GameObject.Find("Mario");
         // playeraction = Player1.GetComponent<PlayerAction>();
+
     }
 
 
     public void HandleOnStateChange()
     {
 
-     
-        if (gerente.gameState == GameState.gameover)
+        switch (gerente.gameState)
         {
 
-            StopAudio(menugui.audioChosen);
-        }
+            case GameState.clear:
+
+                StopAudio();
+                GetComponent<AudioSource>().PlayOneShot(clearStages);
+                break;
+
+            case GameState.playing:
+                if (IsPlayingAudio())
+                {
+                    MuteAudio(false);
+                    GetComponent<AudioSource>().PlayOneShot(pausas);
+                }
+
+                break;
+
+            case GameState.gameover:
+
+                StopAudio();
+                break;
+
+            case GameState.restarting:
+
+                //StopAudio();
+                break;
+
+            case GameState.opening:
 
 
-        if (gerente.gameState == GameState.clear)
-        {
+                break;
 
 
-            StopAudio(menugui.audioChosen);
-        }
+            case GameState.pause:
+                MuteAudio(true);
+                GetComponent<AudioSource>().PlayOneShot(pausas);
 
-        if (gerente.gameState == GameState.dieing)
-        {
+                break;
 
-            StopAudio(menugui.audioChosen);
-            GetComponent<AudioSource>().PlayOneShot(dies);
+            case GameState.dieing:
+                StopAudio();
+                GetComponent<AudioSource>().PlayOneShot(dies);
+                break;
 
-          
-        }
+            case GameState.novafase:
+                StopAudio();
+                break;
 
-        if (gerente.gameState == GameState.restarting)
-        {
+            case GameState.clearStage:
 
-
-            StopAudio(menugui.audioChosen);
-        }
-
-        if (gerente.gameState == GameState.novafase)
-        {
-
-
-            StopAudio(menugui.audioChosen);
-          
-        }
-
-
-        if (gerente.gameState == GameState.opening)
-        {
-
-
-            StopAudio(0);
-            ChooseAudio(0);
-           
-        }
-
-        if (gerente.gameState == GameState.playing)
-        {
-
-          
-            ChooseAudio(menugui.audioChosen);
-        }
-
-
-
-
-
-        if (gerente.gameState == GameState.pause)
-        {
-
-           
-
+                break;
 
         }
 
-        if (gerente.gameState == GameState.online)
-        {
-            Debug.Log("aqqqqjghwjqgwhjqgiwgqiuwgiqgwiuqgwiugqiuwghqiuwg       " + gerente.gameState);
-            ChooseAudio(menugui.audioChosen);
-        }
 
 
 
     }
 
+
+
+
+    void OnLevelWasLoaded(int level)
+    {
+
+        switch (Application.loadedLevelName)
+        {
+            case "Opening":
+                PlayAudio(0);
+                break;
+            case "Midle":
+                StopAudio();
+                break;
+            case "Midle2":
+                StopAudio();
+                break;
+            case "Level1":
+                PlayAudio(1);
+
+                break;
+            case "Level2":
+                PlayAudio(4);
+                break;
+            case "Level3":
+            case "LevelM":
+                PlayAudio(5);
+                break;
+            case "ClearStage":
+                PlayAudio(11);
+                break;
+            case "GameOver":
+                PlayAudio(10);
+
+                break;
+
+
+
+        }
+
+    }
 
     void Update()
     {
 
-        if (gerente.gameState == GameState.playing)
-        {
-          
 
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-
-               
-                MuteAudio(menugui.audioChosen, true);
-                GetComponent<AudioSource>().PlayOneShot(pausas);
-
-              
-
-              
-            }
-        }
-        else if (gerente.gameState == GameState.pause)
-        {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-
-                MuteAudio(menugui.audioChosen, false);
-                GetComponent<AudioSource>().PlayOneShot(pausas);
-               
-            }
-        }
-
-
-        
 
     }
 
 
 
 
-   public  void MuteAudio(int i, bool mute)
+    public void MuteAudio(int i, bool mute)
     {
-        i = i + 3 * (menugui.stage - 1);
-        Debug.Log(i);
+
         this.gameObject.GetComponents<AudioSource>()[i].mute = mute;
     }
 
+    public void MuteAudio(bool mute)
+    {
+        foreach (var audioSource in this.gameObject.GetComponents<AudioSource>())
+        {
+            if (audioSource.isPlaying)
+                audioSource.mute = mute;
+        }
+
+
+    }
+
+
+
+    public void PauseAudio()
+    {
+
+        foreach (var audioSource in this.gameObject.GetComponents<AudioSource>())
+        {
+            audioSource.Pause();
+        }
+
+    }
 
     void PauseAudio(int i)
     {
-
-        i = i + 3 * (menugui.stage - 1);
         this.gameObject.GetComponents<AudioSource>()[i].Pause();
     }
 
     void StopAudio(int i)
     {
 
-        if (i == 0)
-        {
-            GetComponent<AudioSource>().Stop();
-        }
-        else
-        {
-            i = i + 3 * (menugui.stage - 1);
-            this.gameObject.GetComponents<AudioSource>()[i].Stop();
-        }
+        this.gameObject.GetComponents<AudioSource>()[i].Stop();
+
     }
+
+
+    void StopAudio()
+    {
+
+        foreach (var audioSource in gameObject.GetComponents<AudioSource>())
+        {
+            audioSource.Stop();
+        }
+
+    }
+
 
     bool IsPlayingAudio(int i)
     {
-        i = i + 3 * (menugui.stage - 1);
 
-        return this.gameObject.GetComponents<AudioSource>()[i].isPlaying;
+
+        var audioSource = gameObject.GetComponents<AudioSource>();
+        if (audioSource != null)
+            return audioSource[i].isPlaying;
+        else
+            return false;
+
     }
 
-   public  void ChooseAudio(int i)
+    bool IsPlayingAudio()
     {
 
-       
 
-        //if (!this.gameObject.GetComponents<AudioSource>()[i].isPlaying)
+        foreach (var audioSource in gameObject.GetComponents<AudioSource>())
         {
-           // audioChosen = i;
-           
-            if(i!=0)
-                i = i + 3 * (menugui.stage - 1);
-
-            foreach (AudioSource tt in this.gameObject.GetComponents<AudioSource>())
+            if (audioSource.isPlaying)
             {
-                tt.Stop();
+                return true;
             }
 
-           
-            this.gameObject.GetComponents<AudioSource>()[i].Play();
+
 
         }
+        return false;
+    }
+
+    public void PlayAudio(int i)
+    {
+
+
+        StopAudio();
+
+
+        this.gameObject.GetComponents<AudioSource>()[i].Play();
+
+
 
     }
 }

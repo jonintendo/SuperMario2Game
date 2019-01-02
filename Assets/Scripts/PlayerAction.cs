@@ -27,11 +27,13 @@ public class PlayerAction : MonoBehaviour
     //objects
     public GameObject fireball;
     public GameObject fireballout;
-     GameObject stageOut;
+    GameObject stageOut;
+    GameObject stageIn;
 
 
     GameObject menu;
     Manager gerente;
+  
     //variables
 
     public bool fireflower = false;
@@ -41,8 +43,8 @@ public class PlayerAction : MonoBehaviour
 
     public bool nochao = true;
 
-    public int coins = 0;
-    public int lifes = 3;
+    public int coins;
+    public int lifes;
 
 
 
@@ -64,11 +66,9 @@ public class PlayerAction : MonoBehaviour
 
     void Awake()
     {
-
-
-
+               
         DontDestroyOnLoad(gameObject);
-        
+       
 
         GameObject[] others = GameObject.FindGameObjectsWithTag(this.gameObject.tag);
         if (others.Length > 1)
@@ -82,18 +82,19 @@ public class PlayerAction : MonoBehaviour
 
             DontDestroyOnLoad(placar);
 
-            coinst = placar.GetComponentsInChildren<GUIText>()[0];
+            coinst = placar.GetComponentsInChildren<GUIText>()[1];
 
-            lifet = placar.GetComponentsInChildren<GUIText>()[1];
-          
+            lifet = placar.GetComponentsInChildren<GUIText>()[0];
+
             
+
             menu = GameObject.FindGameObjectWithTag("Menu");
           
             if (menu != null)
             {
                 gerente = menu.GetComponent<Manager>();
 
-                gerente.NewPlayer(this.gameObject);
+               
 
                 gerente.OnStateChange += HandleOnStateChange;
             }
@@ -102,9 +103,7 @@ public class PlayerAction : MonoBehaviour
 
 
     }
-
-
-
+       
     void OnDestroy()
     {
         Destroy(placar);
@@ -125,16 +124,16 @@ public class PlayerAction : MonoBehaviour
         timeinvencivel = 70;
 
         nochao = true;
-        lifes = 3;
+        lifes = 0;
 
-        //gerente.SetGameState(GameState.playing);
-        
 
     }
 
     public void restart()
     {
-        transform.position = new Vector3(-30.26363F, 48.491678F, 62.81319F);
+
+        //transform.position = new Vector3(-30.26363F, 48.491678F, 62.81319F);
+        transform.position = stageIn.transform.position + 5*Vector3.up;
         invencivel = false;
         pistolCD = 60;
         GetComponent<CharacterMotor>().jumping.extraHeight = 1;
@@ -142,38 +141,57 @@ public class PlayerAction : MonoBehaviour
 
     }
 
-    public void HandleOnStateChange()
+    void OnLevelWasLoaded(int level)
+    {
+        switch (Application.loadedLevelName)
+        {
+            case "Level1":
+            case "Level2":
+
+                stageOut = GameObject.FindGameObjectWithTag("SaidaFase");
+                stageIn = GameObject.FindGameObjectWithTag("EntradaFase");
+                restart();
+                break;
+        }
+    }
+
+    void HandleOnStateChange()
     {
         timer = 0;
 
-        if (gerente.gameState == GameState.pause)
+        switch (gerente.gameState)
         {
+            case GameState.pause:
+                desativaoControles(true);
+                break;
 
-            desativaoControles(true);
+            case GameState.playing:
+                desativaoControles(false);
+                break;
+
+            case GameState.gameover:
+
+                break;
+            case GameState.opening:
+                
+                break;
+
+            case GameState.restarting:
+                restart();
+                gerente.SetGameState(GameState.playing);
+                break;
+
+            case GameState.clear:
+                desativaoControles(true);
+                restart();
+               
+                Debug.Log("aqqqqjghwjqgwhjqgiwgqiuwgiqgwiuqgwiugqiuwghqiuwg       " + gerente.gameState);
+                break;
+
 
         }
 
-        if (gerente.gameState == GameState.playing)
-        {
-            desativaoControles(false);
-        }
 
-        //if (gerente.gameState == GameState.gameover || gerente.gameState == GameState.opening)
-        //{
-        //   Destroy(this.gameObject);
-            
-        //}
-        if (gerente.gameState == GameState.restarting)
-        {
-           restart();
-           gerente.SetGameState(GameState.playing);
-        }
-
-        if (gerente.gameState == GameState.clear)
-        {
-            stageOut = GameObject.FindGameObjectWithTag("SaidaFase");
-          
-        }
     }
 
     void Update()
@@ -195,15 +213,7 @@ public class PlayerAction : MonoBehaviour
                 {
                     invencivel = false;
                     star = false;
-
-                    GetComponent<AudioSource>().Stop();
-
-                    MenuGUI menugui = menu.GetComponent<MenuGUI>();
-                    Audios audios = menu.GetComponent<Audios>();
-
-                    audios.MuteAudio(menugui.audioChosen, false);
-
-                   
+                     
                 }
 
             }
@@ -285,14 +295,13 @@ public class PlayerAction : MonoBehaviour
                 if (lifes == 0)
                 {
 
-                    gerente.SetGameState(GameState.gameover);
-                    //Application.LoadLevel("GameOver");
+                    //gerente.SetGameState(GameState.gameover);
+                    Application.LoadLevel("GameOver");
+                  
                 }
                 else
                 {
-                    lifes -= 1;
-
-                    restart();
+                    lifes -= 1;                    
                     gerente.SetGameState(GameState.restarting);
                 }
                 //chama o game over
@@ -326,7 +335,7 @@ public class PlayerAction : MonoBehaviour
 
                 gerente.SetGameState(GameState.novafase);
 
-               // Application.LoadLevel("Midle2");
+              
             }
 
 
@@ -447,10 +456,9 @@ public class PlayerAction : MonoBehaviour
 
         if (hit.gameObject.tag == "bandeira")
         {
-            //    audio.PlayOneShot(clearStages);
-            // clearStage = true;
+           if(gerente.gameState!=GameState.clear)
             gerente.SetGameState(GameState.clear);
-            desativaoControles(true);
+            
 
         }
 
@@ -495,47 +503,29 @@ public class PlayerAction : MonoBehaviour
         if (hit.gameObject.tag == "estrela")
         {
 
-            MenuGUI menugui = menu.GetComponent<MenuGUI>();
+           // MenuGUI menugui = menu.GetComponent<MenuGUI>();
 
-              Audios audios = menu.GetComponent<Audios>();
+             // Audios audios = menu.GetComponent<Audios>();
 
-              audios.MuteAudio(menugui.audioChosen, true);
+             // audios.MuteAudio(menugui.audioChosen, true);
 
-            if (menugui.audioChosen == 0)
+          //  if (menugui.audioChosen == 0)
                 GetComponent<AudioSource>().PlayOneShot(estrela);
-            else
-                if (menugui.audioChosen == 2)
-                    GetComponent<AudioSource>().PlayOneShot(estrelaguitar);
-                else
-                    if (menugui.audioChosen == 1)
-                        GetComponent<AudioSource>().PlayOneShot(estrelabatery);
+           // else
+              //  if (menugui.audioChosen == 2)
+               //     GetComponent<AudioSource>().PlayOneShot(estrelaguitar);
+               // else
+                  //  if (menugui.audioChosen == 1)
+                   //     GetComponent<AudioSource>().PlayOneShot(estrelabatery);
+
+
             Invencivel(11);
             star = true;
             Destroy(hit.gameObject);
 
         }
 
-        //if(hit.gameObject.name == "Item")
-        //{
-
-
-        //    if(hit.gameObject.tag=="moeda")
-        //        audio.PlayOneShot(moeda);
-        //        else
-        //    audio.PlayOneShot(item);
-
-        //Texture mat3 = Resources.Load<Texture>("Assets/Materials/BlocoUsado");
-        //hit.gameObject.GetComponent<MeshRenderer> ().materials [0].mainTexture = mat3;
-        //hit.gameObject.renderer.material=(Material)Resources.Load("Assets/Materials/BlocoUsado");
-
-
-
-
-        //hit.gameObject.GetComponent<MeshRenderer>().materials[0].color = Color.cyan;
-
-        //Destroy(hit.gameObject);
-
-        //}
+        
 
 
 

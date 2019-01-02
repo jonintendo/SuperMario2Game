@@ -101,7 +101,7 @@ public class MenuRede : MonoBehaviour
     void Awake()
     {
 
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
 
         GameObject[] others = GameObject.FindGameObjectsWithTag(transform.gameObject.tag);
         if (others.Length > 1)
@@ -133,7 +133,7 @@ public class MenuRede : MonoBehaviour
             gerenteRede.OnStateChange += HandleOnStateRedeChange;
 
 
-            menugui = menu.GetComponent<MenuGUI>();
+            //menugui = menu.GetComponent<MenuGUI>();
 
             Timert = GetComponentInChildren<GUIText>();
 
@@ -174,7 +174,7 @@ public class MenuRede : MonoBehaviour
 
         if (PlayerRedeInstantiated != null)
         {
-            audioChosen = menugui.audioChosen;
+            //audioChosen = menugui.audioChosen;
         }
 
     }
@@ -439,7 +439,7 @@ public class MenuRede : MonoBehaviour
             if (GUILayout.Button("Title Screen"))
             {
 
-                menugui.SelectStage("Opening");
+                Application.LoadLevel("Opening");
 
             }
             GUILayout.EndVertical();
@@ -614,7 +614,7 @@ public class MenuRede : MonoBehaviour
             currentMenu = OpeningNetwork;
 
             gerente.SetGameState(GameState.online);
-            menugui.SelectStage("Level1");
+            Application.LoadLevel("Level1");
 
             AdjustPlayer();
             Network.InitializeServer(32, connectPort, false);
@@ -628,7 +628,7 @@ public class MenuRede : MonoBehaviour
             currentMenu = OpeningNetwork;
 
             gerente.SetGameState(GameState.online);
-            menugui.SelectStage("Level2");
+            Application.LoadLevel("Level2");
 
             AdjustPlayer();
             Network.InitializeServer(32, connectPort, false);
@@ -642,7 +642,7 @@ public class MenuRede : MonoBehaviour
             currentMenu = OpeningNetwork;
 
             gerente.SetGameState(GameState.online);
-            menugui.SelectStage("LevelM");
+            Application.LoadLevel("LevelM");
 
             AdjustPlayer();
             Network.InitializeServer(32, connectPort, false);
@@ -892,7 +892,7 @@ public class MenuRede : MonoBehaviour
         {
             if (Network.isClient)
             {
-                 menugui.SelectStage(stage);
+                Application.LoadLevel(stage);
                 // gerente.SetGameState(GameState.playing);
 
                 if (stage == GameModeOnLine.takeflag.ToString())

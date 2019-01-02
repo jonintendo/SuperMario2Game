@@ -13,7 +13,7 @@ public class Bloco : MonoBehaviour
     public AudioClip item;
     public AudioClip moeda;
 
-   
+
 
     public Texture blocoUsado;
 
@@ -30,7 +30,7 @@ public class Bloco : MonoBehaviour
         //Player1 = GameObject.FindGameObjectWithTag("player1");
     }
 
-  
+
     void Update()
     {
         //if (!usado && Mathf.Abs(Vector3.Distance(transform.position, Player1.transform.FindChild("Cabeca").transform.position)) < 2)
@@ -47,14 +47,7 @@ public class Bloco : MonoBehaviour
 
     }
 
-    public void CreateItem()
-    {
-        if (tag == "cogumelo")
-            Instantiate(cogumelo, transform.position + Vector3.up, Quaternion.identity);
-
-        if (tag == "flor")
-            Instantiate(flor, transform.position + Vector3.up, Quaternion.identity);
-    }
+    
 
 
     void OnCollisionEnter(Collision collision)
@@ -69,62 +62,33 @@ public class Bloco : MonoBehaviour
         if (collision.transform.name.Equals("Cabeca") && !usado)
         {
             usado = true;
-            Debug.Log(collision.gameObject.tag);
-           
-            this.gameObject.GetComponent<Collider>().enabled = false;
-            
-           
-            if (this.gameObject.name == "Cube" || this.gameObject.name == "Item")
-            {
+            gameObject.GetComponent<Collider>().enabled = false;
 
-               
-                if (this.gameObject.tag == "moeda")
-                {
+
+            switch (gameObject.tag)
+            {
+                case "moeda":
                     GetComponent<AudioSource>().PlayOneShot(moeda);
                     this.gameObject.GetComponent<Renderer>().material.mainTexture = blocoUsado;
-                  
-
-                }
-                //else if (this.gameObject.tag == "item")
-                //{
-                //    audio.PlayOneShot(moeda);
-                //    this.gameObject.renderer.material.mainTexture = blocoUsado;
-                //    this.gameObject.name = "ite";
-
-                //}
-                else if (this.gameObject.tag == "bloco")
-                {
-                    Debug.Log("Player Colidiu");
+                    break;
+                case "bloco":                  
                     GetComponent<AudioSource>().PlayOneShot(destruction);
                     Destroy(this.gameObject, delayDie);
-                }
-                else if (this.gameObject.tag == "cogumelo")
-                {
-
+                    break;
+                case "cogumelo":
                     GetComponent<AudioSource>().PlayOneShot(item);
                     this.gameObject.GetComponent<Renderer>().material.mainTexture = blocoUsado;
-                  
-                    CreateItem();
 
-                }
-                else if (this.gameObject.tag == "flor")
-                {
-
+                    Instantiate(cogumelo, transform.position + Vector3.up, Quaternion.identity);
+                    break;
+                case "flor":
                     GetComponent<AudioSource>().PlayOneShot(item);
                     this.gameObject.GetComponent<Renderer>().material.mainTexture = blocoUsado;
-                   
-                    CreateItem();
-                }
-                else
-                {
 
+                    Instantiate(flor, transform.position + Vector3.up, Quaternion.identity);
+                    break;
 
-                }
-              
             }
-
-
-
         }
 
     }

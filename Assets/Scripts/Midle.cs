@@ -10,33 +10,7 @@ public class Midle : MonoBehaviour
     public float openingTime = 1.0f;
     GameObject menu;
     Manager gerente;
-    MenuGUI menugui;
-    // Use this for initialization
-    void Start()
-    {
-
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-        timer += Time.deltaTime;
-        if (timer > openingTime)
-        {
-            //gerente.SetGameState(GameState.playing);
-            //Application.LoadLevel("Level1");
-
-            if (Application.loadedLevelName == "Midle")
-            Application.LoadLevel("Level1");
-
-            if (Application.loadedLevelName == "Midle2")
-                Application.LoadLevel("Level2");
-
-        }
-
-    }
+   // MenuGUI menugui;
 
 
     void Awake()
@@ -52,8 +26,26 @@ public class Midle : MonoBehaviour
 
             //gerente.OnStateChange += HandleOnStateChange;
 
-            menugui = menu.GetComponent<MenuGUI>();
+           // menugui = menu.GetComponent<MenuGUI>();
 
         }
     }
+
+
+    void Update()
+    {
+
+        timer += Time.deltaTime;
+        if (timer > openingTime)
+        {
+
+
+            gerente.NextStage();
+
+        }
+
+    }
+
+
+   
 }

@@ -4,9 +4,9 @@ using System.Collections;
 public class MenuGUI : MonoBehaviour
 {
 
-    public GameObject Player1;
+    // public GameObject Player1;
 
-    UnityEngine.Object player;
+    // UnityEngine.Object player;
 
     //public PlayerAction playeraction;
 
@@ -26,9 +26,6 @@ public class MenuGUI : MonoBehaviour
 
     Manager gerente;
 
-    public int stage;
-    public int audioChosen;
-
 
 
 
@@ -44,156 +41,15 @@ public class MenuGUI : MonoBehaviour
         else
         {
 
-            gerente = this.GetComponent<Manager>();
+            gerente = GetComponent<Manager>();
             gerente.OnStateChange += HandleOnStateChange;
 
-            stage = 0;
-            audioChosen = 0;
 
             gerente.SetGameState(GameState.opening);
 
 
         }
     }
-
-
-
-    void Start()
-    {
-        OnLevelWasLoaded(4);
-        //Player1 = GameObject.FindGameObjectWithTag("player1");
-        // playeraction = Player1.GetComponent<PlayerAction>();
-
-    }
-
-    void Update()
-    {
-
-        
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (gerente.gameState == GameState.playing)
-            {
-
-                gerente.SetGameState(GameState.pause);
-
-            }
-
-            else if (gerente.gameState == GameState.pause)
-            {
-
-                gerente.SetGameState(GameState.playing);
-
-
-            }else  if (gerente.gameState == GameState.online)
-            {
-
-
-              
-                Toggle();
-
-
-            }
-
-        }
-
-    }
-
-    public void HandleOnStateChange()
-    {
-
-
-        if (gerente.gameState == GameState.gameover)
-        {
-
-            if (Application.loadedLevelName != "GameOver")
-            {
-
-
-                showMenu = true;
-                currentMenu = GameOverGame;
-                Destroy(player);
-                //Application.LoadLevel("GameOver");
-            }
-
-
-        }
-
-        if (gerente.gameState == GameState.clear)
-        {
-            if (Application.loadedLevelName != "ClearStage")
-            {
-
-                showMenu = false;
-
-                currentMenu = OpeningGame;
-
-            }
-
-
-        }
-
-        if (gerente.gameState == GameState.dieing)
-        {
-
-            showMenu = false;
-
-        }
-
-        if (gerente.gameState == GameState.restarting)
-        {
-            // Player1.GetComponent<PlayerAction>().restart();
-
-
-        }
-
-        if (gerente.gameState == GameState.novafase)
-        {
-
-
-            NextStage();
-        }
-
-
-        if (gerente.gameState == GameState.opening)
-        {
-
-            showMenu = true;
-            currentMenu = OpeningGame;
-
-
-        }
-
-        if (gerente.gameState == GameState.playing)
-        {
-            showMenu = false;
-            currentMenu = MainMenu;
-
-        }
-
-
-        if (gerente.gameState == GameState.pause)
-        {
-
-            showMenu = true;
-            currentMenu = MainMenu;
-
-
-        }
-
-        if (gerente.gameState == GameState.online)
-        {
-            showMenu = false;
-            currentMenu = MainMenu;
-
-        }
-
-
-        Debug.Log("Handling state change to: " + gerente.gameState);
-    }
-
-
 
 
     void OnGUI()
@@ -222,16 +78,11 @@ public class MenuGUI : MonoBehaviour
             //currentMenu = MainMenu;
             //stage = 1;
 
-            SelectStage("Midle");
+            Application.LoadLevel("Midle");
 
             //gerente.SetGameState(GameState.playing);
 
-            GameObject[] others = GameObject.FindGameObjectsWithTag("player1");
-            if (others.Length == 0)
-            {
-                player = Instantiate(Player1);
-            }
-
+            gerente.NewPlayer();
 
         }
 
@@ -260,7 +111,7 @@ public class MenuGUI : MonoBehaviour
 
         if (GUILayout.Button("Continue"))
         {
-            gerente.SetGameState(GameState.playing);
+            //gerente.SetGameState(GameState.playing);
             // gerente.RemovePlayer();
 
             //if (TakePlayer1())
@@ -270,14 +121,14 @@ public class MenuGUI : MonoBehaviour
             showMenu = false;
             currentMenu = MainMenu;
 
-            CurrentStage();
+            gerente.CurrentStage();
 
         }
 
 
         if (GUILayout.Button("Quit"))
         {
-            gerente.SetGameState(GameState.playing);
+            //gerente.SetGameState(GameState.playing);
 
             //gerente.RemovePlayer();
             //if (TakePlayer1())
@@ -303,80 +154,6 @@ public class MenuGUI : MonoBehaviour
         GUILayout.EndArea();
     }
 
-    public void CurrentStage()
-    {
-        switch (stage)
-        {
-            case 1:
-                //stage = 2;
-
-                SelectStage("Midle");
-                break;
-
-            case 2:
-                //stage = 2;
-                Application.LoadLevel("Midle2");
-                break;
-
-            default:
-                //stage = 0;
-
-                SelectStage("GameOver");
-                break;
-
-        }
-    }
-
-    public void NextStage()
-    {
-        switch (stage)
-        {
-            case 1:
-                //stage = 2;
-
-                SelectStage("Midle2");
-                break;
-
-            case 2:
-                stage = 2;
-                Application.LoadLevel("LevelM");
-                break;
-
-            default:
-                //stage = 0;
-
-                SelectStage("GameOver");
-                break;
-
-        }
-    }
-
-
-    public void SelectStage(string fase)
-    {
-
-        Application.LoadLevel(fase);
-
-        OnLevelWasLoaded(5);
-    }
-
-
-
-
-    // bool TakePlayer1()
-    //{
-    //    Player1 = GameObject.FindGameObjectWithTag("player1");
-
-
-    //    if (Player1 != null)
-    //    {
-    //        playeraction = Player1.GetComponent<PlayerAction>();
-    //        return true;
-    //    }
-    //    else
-    //        return false;
-
-    //}
 
     void MainMenu()
     {
@@ -387,22 +164,13 @@ public class MenuGUI : MonoBehaviour
         float screenY = Screen.height * 0.5f - height * 0.5f;
         GUILayout.BeginArea(new Rect(screenX, screenY, width, height));
 
-        if (gerente.gameState != GameState.online)
+
+        if (GUILayout.Button("Restart"))
         {
-            if (GUILayout.Button("Restart"))
-            {
-
-                //if (TakePlayer1())
-                //playeraction.restart();
-                //gerente.RestartPlayer();
-
-                //Debug.Log("Play button!");
-                //showMenu = false;
-                //gerente.SetGameState(GameState.restarting);
-
-                CurrentStage();
-            }
+            gerente.SetGameState(GameState.restarting);
+            gerente.CurrentStage();
         }
+
 
         if (GUILayout.Button("Options"))
         {
@@ -412,17 +180,8 @@ public class MenuGUI : MonoBehaviour
 
         if (GUILayout.Button("Quit"))
         {
-            Destroy(player);
-            SelectStage("Opening");
-            //gerente.SetGameState(GameState.opening);
 
-            //gerente.RemovePlayer();
-            //if (TakePlayer1())
-            //{
-            //Destroy(Player1);
-            //}
-
-
+            Application.LoadLevel("Opening");
 
         }
         GUILayout.EndArea();
@@ -477,22 +236,22 @@ public class MenuGUI : MonoBehaviour
         if (GUILayout.Button("Normal"))
         {
             currentMenu = OptionsMenu;
-            audioChosen = 1;
-            this.GetComponent<Audios>().ChooseAudio(audioChosen);
+            // audioChosen = 1;
+            // this.GetComponent<Audios>().ChooseAudio(audioChosen);
         }
 
         if (GUILayout.Button("Guitarra"))
         {
             currentMenu = OptionsMenu;
-            audioChosen = 2;
-            this.GetComponent<Audios>().ChooseAudio(audioChosen);
+            //  audioChosen = 2;
+            // this.GetComponent<Audios>().ChooseAudio(audioChosen);
         }
 
         if (GUILayout.Button("Bateria"))
         {
             currentMenu = OptionsMenu;
-            audioChosen = 3;
-            this.GetComponent<Audios>().ChooseAudio(audioChosen);
+            // audioChosen = 3;
+            // this.GetComponent<Audios>().ChooseAudio(audioChosen);
         }
 
         if (GUILayout.Button("Return"))
@@ -538,6 +297,49 @@ public class MenuGUI : MonoBehaviour
     }
 
 
+    void HandleOnStateChange()
+    {
+        switch (gerente.gameState)
+        {
+            case GameState.gameover:
+                showMenu = true;
+                currentMenu = GameOverGame;
+                break;
+
+            case GameState.clear:
+                if (Application.loadedLevelName != "ClearStage")
+                {
+
+                    showMenu = false;
+                    currentMenu = OpeningGame;
+
+                }
+
+                break;
+
+            case GameState.dieing:
+                showMenu = false;
+                break;
+
+            case GameState.opening:
+                showMenu = true;
+                currentMenu = OpeningGame;
+                break;
+
+            case GameState.playing:
+                showMenu = false;
+                currentMenu = MainMenu;
+                break;
+
+            case GameState.pause:
+                showMenu = true;
+                currentMenu = MainMenu;
+                break;
+        }
+
+
+    }
+
 
     public bool ShowMenu
     {
@@ -555,81 +357,7 @@ public class MenuGUI : MonoBehaviour
     }
 
 
-    void OnLevelWasLoaded(int level)
-    {
 
-
-        if (Application.loadedLevelName == "Midle")
-        {
-            stage = 1;
-            audioChosen = 1;
-            gerente.SetGameState(GameState.playing);
-        }
-        else
-
-            if (Application.loadedLevelName == "Midle2")
-            {
-                stage = 2;
-                audioChosen = 1;
-                gerente.SetGameState(GameState.playing);
-            }
-            else
-                if (Application.loadedLevelName == "Level1")
-                {
-                    stage = 1;
-                    audioChosen = 1;
-
-                    if (gerente.gameState != GameState.online)
-                        gerente.SetGameState(GameState.playing);
-                    else
-                        gerente.SetGameState(GameState.online);
-                }
-                else
-                    if (Application.loadedLevelName == "Level2")
-                    {
-                        stage = 2;
-                        audioChosen = 1;
-
-                        if (gerente.gameState != GameState.online)
-                            gerente.SetGameState(GameState.playing);
-                        else
-                            gerente.SetGameState(GameState.online);
-                    }
-                    else
-                        if (Application.loadedLevelName == "Level3" || Application.loadedLevelName == "LevelM")
-                        {
-                            stage = 3;
-                            audioChosen = 1;
-
-                            Debug.Log(gerente.gameState);
-                            if (gerente.gameState != GameState.online)
-                                gerente.SetGameState(GameState.playing);
-                            else
-                                gerente.SetGameState(GameState.online);
-                        }
-                        else
-
-
-                            if (Application.loadedLevelName == "Opening")
-                            {
-                                stage = 0;
-                                gerente.SetGameState(GameState.opening);
-
-
-                            }
-                            else
-
-                                if (Application.loadedLevelName == "GameOver")
-                                {
-                                    gerente.SetGameState(GameState.gameover);
-
-
-                                }
-
-
-
-
-    }
 
 
 

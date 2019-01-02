@@ -616,7 +616,7 @@ public class PlayerActionOnLine : MonoBehaviour
                             MenuGUI menugui = menu.GetComponent<MenuGUI>();
                             Audios audios = menu.GetComponent<Audios>();
 
-                            audios.MuteAudio(menugui.audioChosen, false);
+                            //audios.MuteAudio(menugui.audioChosen, false);
                         }
 
                     }
@@ -1077,7 +1077,7 @@ public class PlayerActionOnLine : MonoBehaviour
 
                     Audios audios = menu.GetComponent<Audios>();
 
-                    audios.MuteAudio(menugui.audioChosen, true);
+                   // audios.MuteAudio(menugui.audioChosen, true);
 
                     if (menuRede.audioChosen == 0)
                         GetComponent<AudioSource>().PlayOneShot(estrela);
@@ -1195,7 +1195,7 @@ public class PlayerActionOnLine : MonoBehaviour
 
                     Audios audios = menu.GetComponent<Audios>();
 
-                    audios.MuteAudio(menugui.audioChosen, true);
+                    //audios.MuteAudio(menugui.audioChosen, true);
 
                     if (menuRede.audioChosen == 0)
                         GetComponent<AudioSource>().PlayOneShot(estrela);
