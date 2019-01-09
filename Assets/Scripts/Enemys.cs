@@ -5,34 +5,25 @@ public class Enemys : MonoBehaviour
 {
 
 
-
-
-
-
     public AudioClip smashenemy;
-
-
     Quaternion rot;
     Vector3 behind;
 
 
     float timer = 0;
-    // Use this for initialization
+
     void Start()
     {
 
         behind = -transform.forward;
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         timer += Time.deltaTime;
 
-        //   this.transform.position += this.transform.forward / 70;
-        // transform.LookAt(new Vector3(player.transform.position.x,0,player.transform.position.z));
-
-
+      
         float damping = 0.5f;
 
         transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * damping);
@@ -45,75 +36,44 @@ public class Enemys : MonoBehaviour
         }
         rot = Quaternion.LookRotation(behind);
 
+        transform.position += this.transform.forward / 200;
 
-        if (transform.name != "Monstro2")
-        {
-            if (transform.name == "Tartaruga")
-                this.transform.position += this.transform.forward / 200;
-            else
-                this.transform.position += this.transform.forward / 300;
-        }
 
     }
 
     void OnTriggerEnter(Collider collision)
     {
-        if (!collision.tag.Equals("enemy"))
-        {
-            //  Destroy(this.gameObject);
-        }
+
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        //if (!collision.transform.tag.Equals("chao"))
-        //{
-        //    Debug.Log(collision.gameObject.name);
-        //}
+        Debug.Log(collision.gameObject.tag);
 
-
-        if (collision.transform.name.Equals("Pes"))
+        switch (collision.transform.tag)
         {
-
-
-            //GameObject Player = collision.gameObject.transform.parent.gameObject;
-            //PlayerAction playeraction = Player.GetComponent<PlayerAction>();
-            //playeraction.coins += 100;
-
-
-            GetComponent<AudioSource>().PlayOneShot(smashenemy);
-            this.gameObject.GetComponent<Collider>().enabled = false;
-        }
-        else
-
-            if (collision.transform.tag.Equals("Fireball"))
-            {
-
-                //GameObject Player = GameObject.FindGameObjectWithTag(collision.transform.name);
-                //PlayerAction playeraction = Player.GetComponent<PlayerAction>();
-                //playeraction.coins += 100;
-
-
-                // Destroy(collision.gameObject);
+            case "Pes":
                 GetComponent<AudioSource>().PlayOneShot(smashenemy);
-                Destroy(this.gameObject, 0.50f);
+               // gameObject.GetComponent<Collider>().enabled = false;
+                Destroy(gameObject);
+                break;
+            case "Fireball":
+                GetComponent<AudioSource>().PlayOneShot(smashenemy);
+                Destroy(gameObject, 0.50f);
+                break;
+            case "estrela":
+              
+                Debug.Log("matou com estrela");
+                GetComponent<AudioSource>().PlayOneShot(smashenemy);
+                Destroy(gameObject);
+                break;
+            default:
+                behind = -1 * behind;
+                break;
 
-            }
-            else
-                if (collision.transform.tag.Contains("layer"))
-                {
-                    Debug.Log(collision.gameObject.tag);
-                    PlayerAction playerstar = collision.transform.GetComponent<PlayerAction>();
-                    if (playerstar.star)
-                    {
-                        GetComponent<AudioSource>().PlayOneShot(smashenemy);
-                    }
-                }
-                else
-                {
+        }
 
-                    behind = -1 * behind;
-                }
+
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)

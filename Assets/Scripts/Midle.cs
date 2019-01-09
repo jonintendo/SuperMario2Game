@@ -10,25 +10,17 @@ public class Midle : MonoBehaviour
     public float openingTime = 1.0f;
     GameObject menu;
     Manager gerente;
-   // MenuGUI menugui;
+    // MenuGUI menugui;
 
 
     void Awake()
     {
         openingTime = 1.0f;
 
-        menu = GameObject.FindGameObjectWithTag("Menu");
-        // if (menu != null)
-        {
-            gerente = menu.GetComponent<Manager>();
 
-            gerente.NewPlayer(this.gameObject);
+        gerente = GameObject.FindGameObjectWithTag("Manager").GetComponent<Manager>();
 
-            //gerente.OnStateChange += HandleOnStateChange;
 
-           // menugui = menu.GetComponent<MenuGUI>();
-
-        }
     }
 
 
@@ -47,5 +39,5 @@ public class Midle : MonoBehaviour
     }
 
 
-   
+
 }

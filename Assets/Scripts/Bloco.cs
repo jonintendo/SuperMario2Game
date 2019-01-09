@@ -27,27 +27,10 @@ public class Bloco : MonoBehaviour
     {
         usado = false;
         delayDie = 0.4f;
-        //Player1 = GameObject.FindGameObjectWithTag("player1");
+     
     }
 
-
-    void Update()
-    {
-        //if (!usado && Mathf.Abs(Vector3.Distance(transform.position, Player1.transform.FindChild("Cabeca").transform.position)) < 2)
-        //{
-
-        //    usado = true;
-
-        //    if (tag == "cogumelo")
-        //        Instantiate(cogumelo,  transform.position + Vector3.up, Quaternion.identity);
-
-        //    if (tag== "flor")
-        //        Instantiate(flor, transform.position + Vector3.up, Quaternion.identity);
-        //}
-
-    }
-
-    
+       
 
 
     void OnCollisionEnter(Collision collision)

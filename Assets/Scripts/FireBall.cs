@@ -7,23 +7,26 @@ public class FireBall : MonoBehaviour {
     private float timer;
 	private float durationTime = 3.0f;
 	private bool didDamage;
+    public AudioClip fireballs;
+
+    public GameObject Player;
 
 
-    public GameObject myPlayer;
+    private void Awake()
+    {
+        GetComponent<AudioSource>().PlayOneShot(fireballs);
+    }
 
-	void Start ()
+
+    void Start ()
 	{
-        GetComponent<Rigidbody>().AddForce(transform.forward * 1000);	
-	
-	}
+        GetComponent<Rigidbody>().AddForce(transform.forward * 1000);      
+
+    }
 
     void Update()
     {
-        //this.transform.position += this.transform.forward/7 ;
-
-        //this.transform.position += this.transform.forward. / 7;
-        //this.transform.position = new Vector3(this.transform.position.x+0.07f,this.transform.position.y,this.transform.position.z) ;
-
+       
         timer += Time.deltaTime;
 
         if (timer > durationTime)
@@ -35,27 +38,24 @@ public class FireBall : MonoBehaviour {
 
     void OnTriggerEnter(Collider collision)
     {
-        if (!collision.tag.Equals("enemy"))
+       /* if (!collision.tag.Equals("enemy"))
         {
             Destroy(this.gameObject);
-        }
+        }*/
     }
 
     void OnCollisionEnter(Collision collision)
     {
 
-        //Debug.Log(collision.gameObject.name);
-        //if (!collision.transform.tag.Equals("Bullet"))
-          //  Destroy(this.gameObject);
-
-        if (!collision.gameObject.tag.Equals("chao"))
+       
+       // if (!collision.gameObject.tag.Equals("chao"))
         {
 
 
             if (collision.gameObject.tag.Equals("enemy"))
-            {
-
-                PlayerAction playeraction = myPlayer.GetComponent<PlayerAction>();
+            {               
+                
+                PlayerAction playeraction = Player.GetComponent<PlayerAction>();
                 playeraction.coins += 100;
                 Debug.Log("colidiu com inmigo");
             }

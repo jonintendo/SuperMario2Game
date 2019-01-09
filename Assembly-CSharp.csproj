@@ -70,6 +70,7 @@
     <Compile Include="Assets\Scripts\FireBall.cs" />
     <Compile Include="Assets\Scripts\Manager.cs" />
     <Compile Include="Assets\Scripts\MenuGUI.cs" />
+    <Compile Include="Assets\Scripts\MenuLocal.cs" />
     <Compile Include="Assets\Scripts\Midle.cs" />
     <Compile Include="Assets\Scripts\OnLine\BandeiraOnline.cs" />
     <Compile Include="Assets\Scripts\OnLine\BlocoOnLine.cs" />

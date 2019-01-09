@@ -15,40 +15,25 @@ public class MenuGUI : MonoBehaviour
     public float width;
     public float height;
 
-    private bool showMenu;
+
+
 
     private delegate void GUIMethod();
     private GUIMethod currentMenu;
 
 
 
-
-
     Manager gerente;
-
-
+    bool showMenu;
 
 
     void Awake()
     {
-        DontDestroyOnLoad(gameObject);
 
-        GameObject[] others = GameObject.FindGameObjectsWithTag(transform.gameObject.tag);
-        if (others.Length > 1)
-        {
-            DestroyImmediate(this.gameObject);
-        }
-        else
-        {
-
-            gerente = GetComponent<Manager>();
-            gerente.OnStateChange += HandleOnStateChange;
+        gerente = gameObject.GetComponentInParent<Manager>();
+        gerente.OnStateChange += HandleOnStateChange;
 
 
-            gerente.SetGameState(GameState.opening);
-
-
-        }
     }
 
 

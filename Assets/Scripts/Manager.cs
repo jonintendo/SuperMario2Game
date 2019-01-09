@@ -4,6 +4,7 @@ using System.Collections;
 
 
 public enum GameState { gameover, clear, playing, opening, restarting, pause, dieing, novafase, online, clearStage }
+public enum GameStateNetwork { local, online }
 public delegate void OnStateChangeHandler();
 
 public class Manager : MonoBehaviour
@@ -13,18 +14,24 @@ public class Manager : MonoBehaviour
     //GUIText lifet;
 
     public GameObject Player1;
+    public GameObject Enemy1;
+    public GameObject Enemy2;
     GameObject player;
+    public GameObject stageManager;
+
 
     public event OnStateChangeHandler OnStateChange;
     public GameState gameState { get; private set; }
 
     string lastGameStage;
+    public GameState lastGameState;
+ 
 
 
-    public void SetGameState(GameState gameState)
+    public void SetGameState(GameState gameStateq)
     {
-        lastGameStage = Application.loadedLevelName;
-        this.gameState = gameState;
+        lastGameState = gameState;
+        gameState = gameStateq;
 
         if (OnStateChange != null)
         {
@@ -69,10 +76,31 @@ public class Manager : MonoBehaviour
     public void RemovePlayer()
     {
         Destroy(player);
-
+        player = null;
 
     }
 
+    public void NewEnemies()
+    {
+        var entradasInimigos = GameObject.FindGameObjectsWithTag("EntradaFaseInimigo");
+
+        foreach (var entradaInimigos in entradasInimigos)
+        {
+            NewEnemy(entradaInimigos.transform.position);
+        }
+
+    }
+
+
+
+    public void NewEnemy(Vector3 position)
+    {
+
+
+        var enemy = Instantiate(Enemy1, position, Quaternion.identity);
+
+
+    }
 
     public void CurrentStage()
     {
@@ -150,93 +178,57 @@ public class Manager : MonoBehaviour
 
 
 
+
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+
+    }
+
+
     void Start()
     {
 
         Application.LoadLevel("Opening");
-        OnStateChange += HandleOnStateChange;
+       
 
 
     }
 
-    void Update()
-    {
+   
 
 
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-
-            switch (gameState)
-            {
-                case GameState.playing:
-                    SetGameState(GameState.pause);
-                    break;
-                case GameState.pause:
-                    SetGameState(GameState.playing);
-                    break;
-            }
-
-        }
-
-    }
-
-    public void HandleOnStateChange()
-    {
-
-        switch (gameState)
-        {
-            case GameState.novafase:
-                NextStage();
-                break;
-
-
-            case GameState.gameover:
-                //RemovePlayer();
-                break;
-
-            case GameState.playing:
-                NewPlayer();
-                break;
-
-            case GameState.opening:
-                RemovePlayer();
-                Debug.Log("Handling state change to: " + gameState);
-                break;
-
-            case GameState.clearStage:
-                break;
-        }
-
-    }
 
 
     void OnLevelWasLoaded(int level)
     {
+        stageManager = GameObject.FindGameObjectWithTag("StageManager");
+       
+
         switch (Application.loadedLevelName)
         {
             case "Opening":
-
+                lastGameStage = "Opening";
                 SetGameState(GameState.opening);
 
                 break;
             case "Midle":
-
+                lastGameStage = "Opening";
                 SetGameState(GameState.playing);
 
                 break;
             case "Midle2":
-
+                lastGameStage = "Opening";
                 SetGameState(GameState.playing);
 
                 break;
             case "Level1":
-
+                lastGameStage = "Midle";
                 SetGameState(GameState.playing);
 
                 break;
             case "Level2":
-
+                lastGameStage = "Midle2";
                 SetGameState(GameState.playing);
 
                 break;
@@ -259,7 +251,21 @@ public class Manager : MonoBehaviour
 
 
         }
+
+        if (player != null)
+        {
+            stageManager.GetComponent<AudioListener>().enabled = false;
+            stageManager.GetComponent<Camera>().enabled = false;
+        }
+        else
+        {
+            stageManager.GetComponent<AudioListener>().enabled = true;
+            stageManager.GetComponent<Camera>().enabled = true;
+        }
     }
+
+
+
 
 
 }

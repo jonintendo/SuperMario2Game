@@ -9,12 +9,12 @@ using System.Collections;
 public class Audios : MonoBehaviour
 {
 
-    public GameObject menu;
-    public Manager gerente;
-    public MenuGUI menugui;
+
+    Manager gerente;
 
 
 
+    //BMG
     public AudioClip dies;
     public AudioClip pausas;
     public AudioClip clearStages;
@@ -23,15 +23,16 @@ public class Audios : MonoBehaviour
 
 
 
+
     void Awake()
     {
-        menu = GameObject.FindGameObjectWithTag("Menu");
 
-        gerente = menu.GetComponent<Manager>();
+
+        gerente = gameObject.GetComponent<Manager>();
 
         gerente.OnStateChange += HandleOnStateChange;
 
-        menugui = menu.GetComponent<MenuGUI>();
+
 
 
 
@@ -39,8 +40,7 @@ public class Audios : MonoBehaviour
     void Start()
     {
 
-        // Player1 = GameObject.Find("Mario");
-        // playeraction = Player1.GetComponent<PlayerAction>();
+
 
     }
 
@@ -58,8 +58,9 @@ public class Audios : MonoBehaviour
                 break;
 
             case GameState.playing:
-                if (IsPlayingAudio())
+                if (gerente.lastGameState== GameState.pause)
                 {
+                   
                     MuteAudio(false);
                     GetComponent<AudioSource>().PlayOneShot(pausas);
                 }
@@ -117,7 +118,7 @@ public class Audios : MonoBehaviour
         switch (Application.loadedLevelName)
         {
             case "Opening":
-                PlayAudio(0);
+                // PlayAudio(0);
                 break;
             case "Midle":
                 StopAudio();
@@ -126,21 +127,21 @@ public class Audios : MonoBehaviour
                 StopAudio();
                 break;
             case "Level1":
-                PlayAudio(1);
+                //PlayAudio(1);
 
                 break;
             case "Level2":
-                PlayAudio(4);
+                // PlayAudio(4);
                 break;
             case "Level3":
             case "LevelM":
-                PlayAudio(5);
+                // PlayAudio(5);
                 break;
             case "ClearStage":
-                PlayAudio(11);
+                //PlayAudio(11);
                 break;
             case "GameOver":
-                PlayAudio(10);
+                //PlayAudio(10);
 
                 break;
 
@@ -163,18 +164,18 @@ public class Audios : MonoBehaviour
     public void MuteAudio(int i, bool mute)
     {
 
-        this.gameObject.GetComponents<AudioSource>()[i].mute = mute;
+        gameObject.GetComponents<AudioSource>()[i].mute = mute;
     }
 
     public void MuteAudio(bool mute)
     {
-        foreach (var audioSource in this.gameObject.GetComponents<AudioSource>())
+        foreach (var audioSource in gameObject.GetComponents<AudioSource>())
         {
             if (audioSource.isPlaying)
                 audioSource.mute = mute;
         }
 
-
+        gerente.stageManager.GetComponent<AudioSource>().mute = mute;
     }
 
 
@@ -197,7 +198,7 @@ public class Audios : MonoBehaviour
     void StopAudio(int i)
     {
 
-        this.gameObject.GetComponents<AudioSource>()[i].Stop();
+        gameObject.GetComponents<AudioSource>()[i].Stop();
 
     }
 
@@ -235,23 +236,17 @@ public class Audios : MonoBehaviour
             {
                 return true;
             }
-
-
-
         }
-        return false;
+
+        return gerente.stageManager.GetComponent<AudioSource>().isPlaying;
+       
     }
 
-    public void PlayAudio(int i)
+    public void PlayAudio()
     {
-
-
         StopAudio();
-
-
-        this.gameObject.GetComponents<AudioSource>()[i].Play();
-
-
+        // this.gameObject.GetComponent<AudioSource>()..PlayOneShot();
+        gerente.stageManager.GetComponent<AudioSource>().Play();
 
     }
 }

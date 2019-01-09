@@ -7,14 +7,11 @@ public class PlayerAction : MonoBehaviour
 
 
 
-    public AudioClip fireballs;
+   
     public AudioClip cogumelos;
     public AudioClip moeda;
-
     public AudioClip pulo;
     public AudioClip puloalto;
-
-
     public AudioClip bump;
 
 
@@ -31,15 +28,14 @@ public class PlayerAction : MonoBehaviour
     GameObject stageIn;
 
 
-    GameObject menu;
+    
     Manager gerente;
-  
+
     //variables
 
-    public bool fireflower = false;
-    public bool cogumelo = false;
-    public bool invencivel = false;
-    public bool star = false;
+    bool fireflower = false;
+    bool cogumelo = false;
+    bool star = false;
 
     public bool nochao = true;
 
@@ -66,44 +62,28 @@ public class PlayerAction : MonoBehaviour
 
     void Awake()
     {
-               
+
         DontDestroyOnLoad(gameObject);
-       
 
-        GameObject[] others = GameObject.FindGameObjectsWithTag(this.gameObject.tag);
-        if (others.Length > 1)
-        {
-            DestroyImmediate(this.gameObject);
-        }
-        else
-        {
 
-            placar = (GameObject)Instantiate(placarPlayer, placarPlayer.transform.position, placarPlayer.transform.rotation);
+        placar = (GameObject)Instantiate(placarPlayer, placarPlayer.transform.position, placarPlayer.transform.rotation);
+        DontDestroyOnLoad(placar);
 
-            DontDestroyOnLoad(placar);
+        coinst = placar.GetComponentsInChildren<GUIText>()[1];
+        lifet = placar.GetComponentsInChildren<GUIText>()[0];
 
-            coinst = placar.GetComponentsInChildren<GUIText>()[1];
 
-            lifet = placar.GetComponentsInChildren<GUIText>()[0];
 
-            
+       // menu = GameObject.FindGameObjectWithTag("Menu");
+        gerente = GameObject.FindGameObjectWithTag("Manager").GetComponent<Manager>();
+        gerente.OnStateChange += HandleOnStateChange2;
 
-            menu = GameObject.FindGameObjectWithTag("Menu");
-          
-            if (menu != null)
-            {
-                gerente = menu.GetComponent<Manager>();
 
-               
 
-                gerente.OnStateChange += HandleOnStateChange;
-            }
-
-        }
 
 
     }
-       
+
     void OnDestroy()
     {
         Destroy(placar);
@@ -118,7 +98,7 @@ public class PlayerAction : MonoBehaviour
         cogumelo = false;
         coins = 40;
         pistolCD = 60;
-        
+
         timedie = 4;
         timeclear = 3;
         timeinvencivel = 70;
@@ -131,10 +111,11 @@ public class PlayerAction : MonoBehaviour
 
     public void restart()
     {
-
+        stageOut = GameObject.FindGameObjectWithTag("SaidaFase");
+        stageIn = GameObject.FindGameObjectWithTag("EntradaFase");
         //transform.position = new Vector3(-30.26363F, 48.491678F, 62.81319F);
-        transform.position = stageIn.transform.position + 5*Vector3.up;
-        invencivel = false;
+        transform.position = stageIn.transform.position + 5 * Vector3.up;
+        star = false;
         pistolCD = 60;
         GetComponent<CharacterMotor>().jumping.extraHeight = 1;
         desativaoControles(false);
@@ -146,19 +127,16 @@ public class PlayerAction : MonoBehaviour
         switch (Application.loadedLevelName)
         {
             case "Level1":
-            case "Level2":
-
-                stageOut = GameObject.FindGameObjectWithTag("SaidaFase");
-                stageIn = GameObject.FindGameObjectWithTag("EntradaFase");
+            case "Level2":              
                 restart();
                 break;
         }
     }
 
-    void HandleOnStateChange()
+    void HandleOnStateChange2()
     {
         timer = 0;
-
+        Debug.Log("aqqqqjghwjqgwhjqgiwgqiuwgiqgwiuqgwiugqiuwghqiuwg       " + gerente.gameState);
         switch (gerente.gameState)
         {
             case GameState.pause:
@@ -173,7 +151,7 @@ public class PlayerAction : MonoBehaviour
 
                 break;
             case GameState.opening:
-                
+
                 break;
 
             case GameState.restarting:
@@ -184,8 +162,8 @@ public class PlayerAction : MonoBehaviour
             case GameState.clear:
                 desativaoControles(true);
                 restart();
+
                
-                Debug.Log("aqqqqjghwjqgwhjqgiwgqiuwgiqgwiuqgwiugqiuwghqiuwg       " + gerente.gameState);
                 break;
 
 
@@ -205,15 +183,16 @@ public class PlayerAction : MonoBehaviour
             coinst.text = coins.ToString();
             lifet.text = lifes.ToString();
 
-            if (invencivel)
+            if (star)
             {
                 timerInvencivel += Time.deltaTime;
 
                 if (timerInvencivel > timeinvencivel)
                 {
-                    invencivel = false;
+
                     star = false;
-                     
+                    transform.FindChild("Corpo").tag = "Corpo";
+
                 }
 
             }
@@ -223,19 +202,10 @@ public class PlayerAction : MonoBehaviour
             if (Input.GetMouseButton(0) && fireflower && pistolCD == 0)
             { //Tiro
 
-                FireBall playeraction = fireball.GetComponent<FireBall>();
-                playeraction.myPlayer = this.gameObject;
-                GameObject ee = (GameObject)Instantiate(fireball, fireballout.transform.position, fireballout.transform.rotation);
-                ee.name = this.tag;
-                //ee.tag=this.name;
-                GetComponent<AudioSource>().PlayOneShot(fireballs);
-                //PlayerAnimation.pistolshoting = true;
-                //attribs.ammo9mm--;
 
-                //    Quaternion g = Quaternion.Euler(Mathf.Cos(i), i, 0);
-                //    var randomRotation = Quaternion.Euler(0, Random.Range(120, 60), 0);
-                //    Instantiate(minibullet, minibulletout.transform.position, this.camera.transform.rotation * Quaternion.Euler(Mathf.Cos(i), Random.Range(-5, 5), 0));
-                //    Instantiate(minibullet, minibulletout.transform.position, this.camera.transform.rotation * Quaternion.Euler(-Mathf.Cos(i), Random.Range(-5, 5), 0));
+                GameObject ee = Instantiate(fireball, fireballout.transform.position, fireballout.transform.rotation);
+                ee.GetComponent<FireBall>().Player = gameObject;
+               
 
 
                 pistolCD = 30;
@@ -261,7 +231,9 @@ public class PlayerAction : MonoBehaviour
 
 
                     if (cogumelo || fireflower)
+                    {
                         GetComponent<AudioSource>().PlayOneShot(puloalto);
+                    }
                     else
                     {
                         GetComponent<AudioSource>().PlayOneShot(pulo);
@@ -277,7 +249,6 @@ public class PlayerAction : MonoBehaviour
         if (gerente.gameState == GameState.dieing)
         {
             timer += Time.deltaTime;
-
 
 
             if (timer < timedie / 2)
@@ -297,11 +268,11 @@ public class PlayerAction : MonoBehaviour
 
                     //gerente.SetGameState(GameState.gameover);
                     Application.LoadLevel("GameOver");
-                  
+
                 }
                 else
                 {
-                    lifes -= 1;                    
+                    lifes -= 1;
                     gerente.SetGameState(GameState.restarting);
                 }
                 //chama o game over
@@ -319,7 +290,7 @@ public class PlayerAction : MonoBehaviour
             {
                 if (!nochao)
                 {
-                   this.transform.position += Vector3.down;
+                    transform.position += Vector3.down;
                 }
                 else
                 {
@@ -335,7 +306,7 @@ public class PlayerAction : MonoBehaviour
 
                 gerente.SetGameState(GameState.novafase);
 
-              
+
             }
 
 
@@ -383,41 +354,28 @@ public class PlayerAction : MonoBehaviour
 
         timerInvencivel = 0;
         timeinvencivel = TimeInvencivel;
-        invencivel = true;
+        star = true;
+        transform.FindChild("Corpo").tag = "estrela";
     }
 
 
-  
+
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
 
-
-        if (hit.gameObject.tag == "enemy" && star)
-        {
-            Debug.Log("matou com estrela");
-
-          coins += 100;
-          Destroy(hit.gameObject);
-           
-        }
-        else
-
-        if (hit.gameObject.tag == "enemy" && !invencivel)
+        if (hit.gameObject.tag == "enemy")
         {
 
-            //if (!nochao && Mathf.Abs(Vector3.Distance(hit.gameObject.transform.position, transform.FindChild("Pes").transform.position)) < 1.5f)
-            //{
-            //    audio.PlayOneShot(smashenemy);
-            //    coins += 100;
-            //    Destroy(hit.gameObject);
+            if (star)
+            {
 
 
-            //}
-            //else 
+                coins += 100;
 
 
-            if (fireflower)
+            }
+            else if (fireflower)
             {
                 GetComponent<AudioSource>().PlayOneShot(bump);
                 fireflower = false;
@@ -436,8 +394,6 @@ public class PlayerAction : MonoBehaviour
             {
 
                 gerente.SetGameState(GameState.dieing);
-
-
                 desativaoControles(true);
             }
 
@@ -456,9 +412,9 @@ public class PlayerAction : MonoBehaviour
 
         if (hit.gameObject.tag == "bandeira")
         {
-           if(gerente.gameState!=GameState.clear)
-            gerente.SetGameState(GameState.clear);
-            
+            if (gerente.gameState != GameState.clear)
+                gerente.SetGameState(GameState.clear);
+
 
         }
 
@@ -503,20 +459,20 @@ public class PlayerAction : MonoBehaviour
         if (hit.gameObject.tag == "estrela")
         {
 
-           // MenuGUI menugui = menu.GetComponent<MenuGUI>();
+            // MenuGUI menugui = menu.GetComponent<MenuGUI>();
 
-             // Audios audios = menu.GetComponent<Audios>();
+            // Audios audios = menu.GetComponent<Audios>();
 
-             // audios.MuteAudio(menugui.audioChosen, true);
+            // audios.MuteAudio(menugui.audioChosen, true);
 
-          //  if (menugui.audioChosen == 0)
-                GetComponent<AudioSource>().PlayOneShot(estrela);
-           // else
-              //  if (menugui.audioChosen == 2)
-               //     GetComponent<AudioSource>().PlayOneShot(estrelaguitar);
-               // else
-                  //  if (menugui.audioChosen == 1)
-                   //     GetComponent<AudioSource>().PlayOneShot(estrelabatery);
+            //  if (menugui.audioChosen == 0)
+            GetComponent<AudioSource>().PlayOneShot(estrela);
+            // else
+            //  if (menugui.audioChosen == 2)
+            //     GetComponent<AudioSource>().PlayOneShot(estrelaguitar);
+            // else
+            //  if (menugui.audioChosen == 1)
+            //     GetComponent<AudioSource>().PlayOneShot(estrelabatery);
 
 
             Invencivel(11);
@@ -525,7 +481,7 @@ public class PlayerAction : MonoBehaviour
 
         }
 
-        
+
 
 
 
