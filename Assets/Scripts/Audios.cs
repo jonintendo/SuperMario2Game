@@ -10,31 +10,21 @@ public class Audios : MonoBehaviour
 {
 
 
-    Manager gerente;
-
-
-
+   
     //BMG
     public AudioClip dies;
     public AudioClip pausas;
     public AudioClip clearStages;
     public AudioClip gameOvers;
 
-
+    Manager gerente;
 
 
 
     void Awake()
     {
-
-
-        gerente = gameObject.GetComponent<Manager>();
-
-        gerente.OnStateChange += HandleOnStateChange;
-
-
-
-
+        gerente = GameObject.FindGameObjectWithTag("Manager").GetComponent<Manager>();
+        gerente.OnStateChange += HandleOnStateChange4;
 
     }
     void Start()
@@ -45,7 +35,7 @@ public class Audios : MonoBehaviour
     }
 
 
-    public void HandleOnStateChange()
+    public void HandleOnStateChange4()
     {
 
         switch (gerente.gameState)
@@ -53,15 +43,15 @@ public class Audios : MonoBehaviour
 
             case GameState.clear:
 
-                StopAudio();
+               // StopAudio();
                 GetComponent<AudioSource>().PlayOneShot(clearStages);
                 break;
 
             case GameState.playing:
-                if (gerente.lastGameState== GameState.pause)
+                if (gerente.lastGameState == GameState.pause)
                 {
                    
-                    MuteAudio(false);
+                    //MuteAudio(false);
                     GetComponent<AudioSource>().PlayOneShot(pausas);
                 }
 
@@ -69,7 +59,7 @@ public class Audios : MonoBehaviour
 
             case GameState.gameover:
 
-                StopAudio();
+                //StopAudio();
                 break;
 
             case GameState.restarting:
@@ -84,18 +74,18 @@ public class Audios : MonoBehaviour
 
 
             case GameState.pause:
-                MuteAudio(true);
+                //MuteAudio(true);
                 GetComponent<AudioSource>().PlayOneShot(pausas);
 
                 break;
 
             case GameState.dieing:
-                StopAudio();
+                //StopAudio();
                 GetComponent<AudioSource>().PlayOneShot(dies);
                 break;
 
             case GameState.novafase:
-                StopAudio();
+                //StopAudio();
                 break;
 
             case GameState.clearStage:
@@ -121,10 +111,10 @@ public class Audios : MonoBehaviour
                 // PlayAudio(0);
                 break;
             case "Midle":
-                StopAudio();
+                //StopAudio();
                 break;
             case "Midle2":
-                StopAudio();
+                //StopAudio();
                 break;
             case "Level1":
                 //PlayAudio(1);
@@ -151,104 +141,8 @@ public class Audios : MonoBehaviour
 
     }
 
-    void Update()
-    {
-
-
-
-    }
-
-
-
-
-    public void MuteAudio(int i, bool mute)
-    {
-
-        gameObject.GetComponents<AudioSource>()[i].mute = mute;
-    }
-
-    public void MuteAudio(bool mute)
-    {
-        foreach (var audioSource in gameObject.GetComponents<AudioSource>())
-        {
-            if (audioSource.isPlaying)
-                audioSource.mute = mute;
-        }
-
-        gerente.stageManager.GetComponent<AudioSource>().mute = mute;
-    }
-
-
-
-    public void PauseAudio()
-    {
-
-        foreach (var audioSource in this.gameObject.GetComponents<AudioSource>())
-        {
-            audioSource.Pause();
-        }
-
-    }
-
-    void PauseAudio(int i)
-    {
-        this.gameObject.GetComponents<AudioSource>()[i].Pause();
-    }
-
-    void StopAudio(int i)
-    {
-
-        gameObject.GetComponents<AudioSource>()[i].Stop();
-
-    }
-
-
-    void StopAudio()
-    {
-
-        foreach (var audioSource in gameObject.GetComponents<AudioSource>())
-        {
-            audioSource.Stop();
-        }
-
-    }
-
-
-    bool IsPlayingAudio(int i)
-    {
-
-
-        var audioSource = gameObject.GetComponents<AudioSource>();
-        if (audioSource != null)
-            return audioSource[i].isPlaying;
-        else
-            return false;
-
-    }
-
-    bool IsPlayingAudio()
-    {
-
-
-        foreach (var audioSource in gameObject.GetComponents<AudioSource>())
-        {
-            if (audioSource.isPlaying)
-            {
-                return true;
-            }
-        }
-
-        return gerente.stageManager.GetComponent<AudioSource>().isPlaying;
-       
-    }
-
-    public void PlayAudio()
-    {
-        StopAudio();
-        // this.gameObject.GetComponent<AudioSource>()..PlayOneShot();
-        gerente.stageManager.GetComponent<AudioSource>().Play();
-
-    }
+   
+   
 }
 
 

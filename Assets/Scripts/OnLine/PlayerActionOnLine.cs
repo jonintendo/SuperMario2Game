@@ -32,13 +32,11 @@ public class PlayerActionOnLine : MonoBehaviour
     GameObject stageOut;
 
 
-    GameObject menu;
+
     Manager gerente;
 
-    public MenuRede menuRede;
 
-    GameObject menuRede1;
-    ManagerOnLine gerenteRede;
+
     //variables
 
 
@@ -72,7 +70,7 @@ public class PlayerActionOnLine : MonoBehaviour
 
 
 
-    public int Roupa;
+    // public PlayerRoupa roupa;
 
 
 
@@ -107,30 +105,30 @@ public class PlayerActionOnLine : MonoBehaviour
 
     public event OnStateChangeHandler OnStateChange;
 
-    public event OnStateRedeChangeHandler OnStateRedeChange;
 
-
-    
-
-
-    public void SetRoupa(int roupa)
+    public void SetRoupa(PlayerRoupa roupa)
     {
-        if (roupa == 0)
-            mat.mainTexture = marioLuigi;
+        switch (roupa)
+        {
+            case PlayerRoupa.luigi:
+                mat.mainTexture = marioLuigi;
+                break;
 
-        if (roupa == 1)
-            mat.mainTexture = marioFogo;
+            case PlayerRoupa.mario:
+                mat.mainTexture = mario;
+                break;
+            case PlayerRoupa.fogo:
+                mat.mainTexture = marioFogo;
+                break;
+            case PlayerRoupa.mimico:
+                mat.mainTexture = marioMimic;
+                break;
+            case PlayerRoupa.wario:
+                mat.mainTexture = marioWario;
+                break;
+        }
 
-        if (roupa == 2)
-            mat.mainTexture = marioMimic;
 
-        if (roupa == 3)
-            mat.mainTexture = mario;
-
-        if (roupa == 4)
-            mat.mainTexture = marioWario;
-
-        Roupa = roupa;
     }
 
     public void SetPlacar(int moedas, int vidas, bool? flags)
@@ -146,21 +144,20 @@ public class PlayerActionOnLine : MonoBehaviour
             ffg = flag;
         else
         {
-          ffg=  bool.Parse(flags.ToString());
-          flag = bool.Parse(flags.ToString()); ;
+            ffg = bool.Parse(flags.ToString());
+            flag = bool.Parse(flags.ToString()); ;
         }
 
-      
+
 
         if (coinst != null)
         {
             this.coinst.text = coins.ToString();
             this.lifet.text = lifes.ToString();
 
+            GetComponent<NetworkView>().RPC("ReceiveStatus", RPCMode.All, this.coins, this.lifes, flags, gerente.connectplayerName);//so mandando pra todos pq se nao o server nao recebe quando eh ele que manda, era so pra ir proserver
 
 
-            menuRede.SendStatus(this.coins, this.lifes, ffg);//manda pro server amanha vou fazer mandar todo o player action de uma vez
-            // networkView.RPC("TellAllOurPlacar", RPCMode.All, this.lifes, this.coins);//manda pros outros players
         }
     }
 
@@ -177,20 +174,21 @@ public class PlayerActionOnLine : MonoBehaviour
 
 
     [RPC]
-    bool TellAllOurName(String name, string tag, int roupa, NetworkMessageInfo info)
+    bool TellAllOurName(String name, string tagq, PlayerRoupa roupa, NetworkMessageInfo info)
     {
 
 
         if (info.sender == GetComponent<NetworkView>().owner && !GetComponent<NetworkView>().isMine)
         {
             // this.name = name;
-            this.tag = tag;
-            Roupa = roupa;
+            tag = tagq;
+            
+            SetRoupa(roupa);
             TextMesh nametext = this.gameObject.GetComponentsInChildren<TextMesh>()[0];
             nametext.text = this.tag;
 
 
-            Debug.Log(Roupa);
+            Debug.Log(roupa.ToString());
         }
 
 
@@ -273,17 +271,6 @@ public class PlayerActionOnLine : MonoBehaviour
 
 
 
-
-        //DontDestroyOnLoad(gameObject);
-
-        //GameObject[] others = GameObject.FindGameObjectsWithTag(this.gameObject.tag);
-        //if (others.Length > 1)
-        //{
-        //    DestroyImmediate(this.gameObject);
-        //}
-
-
-
         if (!GetComponent<NetworkView>().isMine)
         {
             desativaoControles(true);
@@ -292,43 +279,21 @@ public class PlayerActionOnLine : MonoBehaviour
             Debug.Log("Nao eh meu");
 
         }
-
-
-
         else
         {
-          
-            menu = GameObject.FindGameObjectWithTag("Menu");
 
-            if (menu != null)
-            {
-                gerente = menu.GetComponent<Manager>();
 
-                // gerente.NewPlayer(this.gameObject);
+            gerente = GameObject.FindGameObjectWithTag("Manager").GetComponent<Manager>();
 
-                gerente.OnStateChange += HandleOnStateChange;
+            gerente.OnStateChange += HandleOnStateChange;
 
-                menu.GetComponent<AudioListener>().enabled = false;
-               menu.GetComponent<Camera>().enabled = false;
-               
-            }
-
-            menuRede1 = GameObject.FindGameObjectWithTag("MenuOnLine");
-            if (menuRede1 != null)
-            {
-                gerenteRede = menuRede1.GetComponent<ManagerOnLine>();
-
-                // gerenteRede.NewPlayer(this.gameObject);
-
-                gerenteRede.OnStateChange += HandleOnStateRedeChange;
-            }
 
             TextMesh nametext = this.gameObject.GetComponentsInChildren<TextMesh>()[0];
             nametext.text = this.tag;
 
             OnlineTagsPlacar();
 
-          
+
 
         }
 
@@ -342,25 +307,25 @@ public class PlayerActionOnLine : MonoBehaviour
 
         Vector3 placarPosition = new Vector3(0, 0, 0);
 
-        if (this.tag == "player1")
-        {
-            placarPosition = new Vector3(98.28f, 23.49591f, 0);
-        }
-        else if (this.tag == "player2")
-        {
-            placarPosition = new Vector3(98.52f, 23.49591f, 0);
-        }
-        else if (this.tag == "player3")
-        {
-            placarPosition = new Vector3(98.8f, 23.49591f, 0);
-        }
-        else if (this.tag == "player4")
-        {
-            placarPosition = new Vector3(99f, 23.49591f, 0);
-        }
 
+        switch(tag)
+        {
+            case "player1":
+                placarPosition = new Vector3(98.28f, 23.49591f, 0);
+                break;
+            case "player2":
+                placarPosition = new Vector3(98.52f, 23.49591f, 0);
+                break;
+            case "player3":
+                placarPosition = new Vector3(98.8f, 23.49591f, 0);
+                break;
+            case "player4":
+                placarPosition = new Vector3(99f, 23.49591f, 0);
+                break;
 
-        // placar = (GameObject)Instantiate(placarPlayer, placarPosition, placarPlayer.transform.rotation);
+        }
+             
+            
 
         placar = (GameObject)Network.Instantiate(placarPlayer, placarPosition, placarPlayer.transform.rotation, 0);
 
@@ -372,10 +337,10 @@ public class PlayerActionOnLine : MonoBehaviour
         coinst.text = coins.ToString();
         lifet.text = lifes.ToString();
 
-        SetRoupa(Roupa);
+       // SetRoupa(gerente.roupa);
 
-        // networkView.RPC("TellAllOurPlacar", RPCMode.All, this.lifes, this.coins);
-        GetComponent<NetworkView>().RPC("TellAllOurName", RPCMode.All, "", this.tag, Roupa);
+     
+        GetComponent<NetworkView>().RPC("TellAllOurName", RPCMode.All, "", tag, gerente.roupa);
 
     }
 
@@ -386,11 +351,7 @@ public class PlayerActionOnLine : MonoBehaviour
         if (GetComponent<NetworkView>().isMine)
         {
             Network.Destroy(placar);
-            if (menu != null)
-            {
-                menu.GetComponent<AudioListener>().enabled =true;
-               menu.GetComponent<Camera>().enabled = true;
-            }
+
         }
 
         // Destroy(placar);
@@ -416,7 +377,7 @@ public class PlayerActionOnLine : MonoBehaviour
         nochao = true;
         lifes = 3;
 
-        if (menuRede.gameMode == GameModeOnLine.takeflag)
+        if (gerente.gameModeOnLine == GameModeOnLine.takeflag)
         {
             transform.position = new Vector3(-30.26363F + UnityEngine.Random.Range(1, 10), 48.491678F, 62.81319F + UnityEngine.Random.Range(1, 10));
         }
@@ -427,12 +388,12 @@ public class PlayerActionOnLine : MonoBehaviour
                 transform.position = new Vector3(-30.26363F, 48.491678F, 62.81319F);
             else
                 if (Tag == "player3")
-                    transform.position = new Vector3(-22.97078f, 9.795295f, -99.43913f);
-                else
+                transform.position = new Vector3(-22.97078f, 9.795295f, -99.43913f);
+            else
                     if (Tag == "player4")
-                        transform.position = new Vector3(104.9768f, 9.795295f, -52.62424f);
-                    else
-                        transform.position = new Vector3(57.36654f, 9.795295f, 64.04122f);
+                transform.position = new Vector3(104.9768f, 9.795295f, -52.62424f);
+            else
+                transform.position = new Vector3(57.36654f, 9.795295f, 64.04122f);
 
 
         }
@@ -442,9 +403,9 @@ public class PlayerActionOnLine : MonoBehaviour
 
     public void restart()
     {
-      
-      
-       
+
+
+
 
 
         //invencivel = false;
@@ -486,49 +447,18 @@ public class PlayerActionOnLine : MonoBehaviour
 
         if (gerente.gameState == GameState.clear)
         {
-            stageOut = GameObject.FindGameObjectWithTag("SaidaFase");
-        }
-    }
-
-
-    public void HandleOnStateRedeChange()
-    {
-        timer = 0;
-
-        if (gerenteRede.gameState == GameStateOnLine.pause)
-        {
-
-            desativaoControles(true);
-
-        }
-
-        if (gerenteRede.gameState == GameStateOnLine.playing)
-        {
-            desativaoControles(false);
-        }
-
-        //if (gerente.gameState == GameState.gameover || gerente.gameState == GameState.opening)
-        //{
-        //   Destroy(this.gameObject);
-
-        //}
-
-
-        if (gerenteRede.gameState == GameStateOnLine.clear)
-        {
             //stageOut = GameObject.FindGameObjectWithTag("SaidaFase");
-
             SetPlacar(0, lifes, flag);
         }
 
-        if (gerenteRede.gameState == GameStateOnLine.dieing)
+        if (gerente.gameState == GameState.dieing)
         {
             restart();
-            
+
         }
-
-
     }
+
+
 
 
     void AnimationControl()
@@ -557,9 +487,9 @@ public class PlayerActionOnLine : MonoBehaviour
         else
 
             if (speedV > 0.5f && !ff.IsPlaying("Armature|MyFireBall"))
-            {
-                ff.Play("Armature|MyWalk", PlayMode.StopAll);
-            }
+        {
+            ff.Play("Armature|MyWalk", PlayMode.StopAll);
+        }
 
 
 
@@ -593,7 +523,7 @@ public class PlayerActionOnLine : MonoBehaviour
 
             AnimationControl();
 
-            if (menuRede.gameMode == GameModeOnLine.takeflag)
+            if (gerente.gameModeOnLine == GameModeOnLine.takeflag)
             {
                 //if (gerente.gameState == GameState.playing)
                 {
@@ -613,10 +543,7 @@ public class PlayerActionOnLine : MonoBehaviour
 
                             GetComponent<AudioSource>().Stop();
 
-                            MenuGUI menugui = menu.GetComponent<MenuGUI>();
-                            Audios audios = menu.GetComponent<Audios>();
 
-                            //audios.MuteAudio(menugui.audioChosen, false);
                         }
 
                     }
@@ -751,10 +678,10 @@ public class PlayerActionOnLine : MonoBehaviour
 
 
             }
-            if (menuRede.gameMode == GameModeOnLine.timeatack && menuRede.contando)
+            if (gerente.gameModeOnLine == GameModeOnLine.timeatack && gerente.gameState==  GameState.playing)
             {
 
-               // if (gerente.gameState == GameState.playing)
+                // if (gerente.gameState == GameState.playing)
                 {
                     timer += Time.deltaTime;
 
@@ -977,43 +904,43 @@ public class PlayerActionOnLine : MonoBehaviour
 
         if (GetComponent<NetworkView>().isMine)
         {
-            if (menuRede.gameMode == GameModeOnLine.takeflag)
+            if (gerente.gameModeOnLine == GameModeOnLine.takeflag)
             {
                 if (hit.gameObject.tag == "enemy" && star)
                 {
                     Debug.Log("matou com estrela");
 
-                    SetPlacar(100, lifes,flag);
+                    SetPlacar(100, lifes, flag);
                     Network.Destroy(hit.gameObject);
 
                 }
                 else
                     if (hit.gameObject.tag == "enemy" && !invencivel)
-                    {
-
-
-                      
-                            GetComponent<AudioSource>().PlayOneShot(bump);
-                           
-                            Invencivel(1);
-
-                      
-
-                            gerenteRede.SetGameState(GameStateOnLine.dieing);
+                {
 
 
 
-                    }
+                    GetComponent<AudioSource>().PlayOneShot(bump);
+
+                    Invencivel(1);
+
+
+
+                    gerente.SetGameState(GameState.dieing);
+
+
+
+                }
 
 
 
                 if (hit.gameObject.name == "Water")
                 {
-                   gerenteRede.SetGameState(GameStateOnLine.dieing);
+                    gerente.SetGameState(GameState.dieing);
 
 
                     // desativaoControles(true);
-                   
+
 
                 }
 
@@ -1021,8 +948,8 @@ public class PlayerActionOnLine : MonoBehaviour
                 {
 
                     flag = true;
-                      gerenteRede.SetGameState(GameStateOnLine.clear);
-                  
+                    gerente.SetGameState(GameState.clear);
+
                 }
 
                 if (hit.gameObject.tag == "chao")
@@ -1037,7 +964,7 @@ public class PlayerActionOnLine : MonoBehaviour
 
                 if (hit.gameObject.tag == "Cogumelo")
                 {
-                   
+
                     GetComponent<AudioSource>().PlayOneShot(cogumelos);
                     SetPlacar(150, lifes, flag);
                     Network.Destroy(hit.gameObject);
@@ -1047,7 +974,7 @@ public class PlayerActionOnLine : MonoBehaviour
 
                 if (hit.gameObject.tag == "Flor")
                 {
-                   
+
                     GetComponent<AudioSource>().PlayOneShot(cogumelos);
                     SetPlacar(200, this.lifes, flag);
                     Network.Destroy(hit.gameObject);
@@ -1073,20 +1000,11 @@ public class PlayerActionOnLine : MonoBehaviour
 
                 if (hit.gameObject.tag == "estrela")
                 {
-                    MenuGUI menugui = menu.GetComponent<MenuGUI>();
 
-                    Audios audios = menu.GetComponent<Audios>();
 
-                   // audios.MuteAudio(menugui.audioChosen, true);
 
-                    if (menuRede.audioChosen == 0)
-                        GetComponent<AudioSource>().PlayOneShot(estrela);
-                    else
-                        if (menuRede.audioChosen == 2)
-                            GetComponent<AudioSource>().PlayOneShot(estrelaguitar);
-                        else
-                            if (menuRede.audioChosen == 1)
-                                GetComponent<AudioSource>().PlayOneShot(estrelabatery);
+                    GetComponent<AudioSource>().PlayOneShot(estrela);
+
                     Invencivel(11);
                     star = true;
                     Network.Destroy(hit.gameObject);
@@ -1100,7 +1018,7 @@ public class PlayerActionOnLine : MonoBehaviour
                 //}
             }
 
-            if (menuRede.gameMode == GameModeOnLine.timeatack && menuRede.contando)
+            if (gerente.gameModeOnLine == GameModeOnLine.timeatack &&  gerente.gameState== GameState.playing)
             {
                 if (hit.gameObject.tag == "enemy" && star)
                 {
@@ -1112,19 +1030,19 @@ public class PlayerActionOnLine : MonoBehaviour
                 }
                 else
                     if (hit.gameObject.tag == "enemy" && !invencivel)
-                    {
-                        GetComponent<AudioSource>().PlayOneShot(bump);
-                           
-                        Invencivel(1);
-                        SetPlacar(-100, lifes, flag);
+                {
+                    GetComponent<AudioSource>().PlayOneShot(bump);
 
-                    }
+                    Invencivel(1);
+                    SetPlacar(-100, lifes, flag);
+
+                }
 
 
 
                 if (hit.gameObject.name == "Water")
                 {
-                    gerenteRede.SetGameState(GameStateOnLine.dieing);
+                    gerente.SetGameState(GameState.dieing);
 
 
                     // desativaoControles(true);
@@ -1133,7 +1051,7 @@ public class PlayerActionOnLine : MonoBehaviour
 
                 if (hit.gameObject.tag == "bandeira")
                 {
-                   
+
 
                 }
 
@@ -1153,20 +1071,20 @@ public class PlayerActionOnLine : MonoBehaviour
                     SetPlacar(150, lifes, flag);
 
                     GetComponent<AudioSource>().PlayOneShot(cogumelos);
-                    
+
                     Network.Destroy(hit.gameObject);
 
                 }
-               
+
 
                 if (hit.gameObject.tag == "Flor")
                 {
-                   // GetComponent<CharacterMotor>().jumping.extraHeight = 10;
+                    // GetComponent<CharacterMotor>().jumping.extraHeight = 10;
 
                     SetPlacar(200, lifes, flag);
 
                     GetComponent<AudioSource>().PlayOneShot(cogumelos);
-                  
+
                     Network.Destroy(hit.gameObject);
                 }
 
@@ -1191,22 +1109,10 @@ public class PlayerActionOnLine : MonoBehaviour
                 if (hit.gameObject.tag == "estrela")
                 {
 
-                    MenuGUI menugui = menu.GetComponent<MenuGUI>();
 
-                    Audios audios = menu.GetComponent<Audios>();
+                    GetComponent<AudioSource>().PlayOneShot(estrela);
 
-                    //audios.MuteAudio(menugui.audioChosen, true);
-
-                    if (menuRede.audioChosen == 0)
-                        GetComponent<AudioSource>().PlayOneShot(estrela);
-                    else
-                        if (menuRede.audioChosen == 2)
-                            GetComponent<AudioSource>().PlayOneShot(estrelaguitar);
-                        else
-                            if (menuRede.audioChosen == 1)
-                                GetComponent<AudioSource>().PlayOneShot(estrelabatery);
-                            
-                                Invencivel(11);
+                    Invencivel(11);
                     star = true;
                     Network.Destroy(hit.gameObject);
 
@@ -1301,20 +1207,15 @@ public class PlayerActionOnLine : MonoBehaviour
             else
 
                 if (speedV > 0.5f && !ff.IsPlaying("Armature|MyFireBall"))
-                {
-                    ff.Play("Armature|MyWalk", PlayMode.StopAll);
-                }
+            {
+                ff.Play("Armature|MyWalk", PlayMode.StopAll);
+            }
 
             if (star && !GetComponent<AudioSource>().isPlaying)
             {
-                if (menuRede.audioChosen == 0)
-                    GetComponent<AudioSource>().PlayOneShot(estrela);
-                else
-                    if (menuRede.audioChosen == 2)
-                        GetComponent<AudioSource>().PlayOneShot(estrelaguitar);
-                    else
-                        if (menuRede.audioChosen == 1)
-                            GetComponent<AudioSource>().PlayOneShot(estrelabatery);
+
+                GetComponent<AudioSource>().PlayOneShot(estrela);
+
             }
 
 

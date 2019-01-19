@@ -7,7 +7,7 @@ public class PlayerAction : MonoBehaviour
 
 
 
-   
+
     public AudioClip cogumelos;
     public AudioClip moeda;
     public AudioClip pulo;
@@ -28,7 +28,7 @@ public class PlayerAction : MonoBehaviour
     GameObject stageIn;
 
 
-    
+
     Manager gerente;
 
     //variables
@@ -74,7 +74,7 @@ public class PlayerAction : MonoBehaviour
 
 
 
-       // menu = GameObject.FindGameObjectWithTag("Menu");
+        // menu = GameObject.FindGameObjectWithTag("Menu");
         gerente = GameObject.FindGameObjectWithTag("Manager").GetComponent<Manager>();
         gerente.OnStateChange += HandleOnStateChange2;
 
@@ -111,15 +111,17 @@ public class PlayerAction : MonoBehaviour
 
     public void restart()
     {
-        stageOut = GameObject.FindGameObjectWithTag("SaidaFase");
-        stageIn = GameObject.FindGameObjectWithTag("EntradaFase");
-        //transform.position = new Vector3(-30.26363F, 48.491678F, 62.81319F);
-        transform.position = stageIn.transform.position + 5 * Vector3.up;
-        star = false;
-        pistolCD = 60;
-        GetComponent<CharacterMotor>().jumping.extraHeight = 1;
-        desativaoControles(false);
-
+        if (this)
+        {
+            stageOut = GameObject.FindGameObjectWithTag("SaidaFase");
+            stageIn = GameObject.FindGameObjectWithTag("EntradaFase");
+            //transform.position = new Vector3(-30.26363F, 48.491678F, 62.81319F);
+            transform.position = stageIn.transform.position + 5 * Vector3.up;
+            star = false;
+            pistolCD = 60;
+            GetComponent<CharacterMotor>().jumping.extraHeight = 1;
+            desativaoControles(false);
+        }
     }
 
     void OnLevelWasLoaded(int level)
@@ -127,7 +129,7 @@ public class PlayerAction : MonoBehaviour
         switch (Application.loadedLevelName)
         {
             case "Level1":
-            case "Level2":              
+            case "Level2":
                 restart();
                 break;
         }
@@ -163,7 +165,7 @@ public class PlayerAction : MonoBehaviour
                 desativaoControles(true);
                 restart();
 
-               
+
                 break;
 
 
@@ -205,7 +207,7 @@ public class PlayerAction : MonoBehaviour
 
                 GameObject ee = Instantiate(fireball, fireballout.transform.position, fireballout.transform.rotation);
                 ee.GetComponent<FireBall>().Player = gameObject;
-               
+
 
 
                 pistolCD = 30;

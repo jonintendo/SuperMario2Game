@@ -48,7 +48,7 @@ public class Enemys : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.gameObject.tag);
+        //Debug.Log(collision.gameObject.tag);
 
         switch (collision.transform.tag)
         {

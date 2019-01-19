@@ -6,16 +6,14 @@ using System.Collections.Generic;
 public class SERVER : MonoBehaviour
 {
 
-
-
-    MenuRede menuRede;
-    public Ilha2 ilha;
-
-    bool contando;
-    //  float setupTimer;
-    public float timer;
-
+    public Ilha2 ilha;    
     public ArrayList playerList = new ArrayList();
+
+   
+    GUIOnLine guiOnLine;
+    Manager gerente;
+
+    float timer;
 
     class PlayerChat
     {
@@ -26,32 +24,26 @@ public class SERVER : MonoBehaviour
     void OnServerInitialized()
     {
 
+        //AddNewPlayer(gerente.connectplayerName, Network.player);
 
-        // window = new Rect(150, 150, width, height);
-        menuRede = GetComponent<MenuRede>();
+        guiOnLine.HitEnter("server ativo", "");
 
-        //currentMenu = ChatWindow;
 
-        AddNewPlayer(menuRede.playername, Network.player);
 
-        menuRede.HitEnter("server ativo", "");
-
-        //showMenu = true;
-
-        ilha = new Ilha2(menuRede.gameMode);
+        ilha = new Ilha2(gerente.gameModeOnLine);
 
     }
 
 
     void OnPlayerDisconnected(NetworkPlayer player)
     {
-        menuRede.HitEnter("Player disconnected from: " + player.ipAddress + ":" + player.port, "");
+        guiOnLine.HitEnter("Player disconnected from: " + player.ipAddress + ":" + player.port, "");
 
         string hhh = ilha.RemovePlayerN(player);
 
         if (hhh != "")
         {
-            menuRede.HitEnter(hhh + " left the Game", "");
+            guiOnLine.HitEnter(hhh + " left the Game", "");
         }
 
 
@@ -59,7 +51,7 @@ public class SERVER : MonoBehaviour
 
         if (hh != "")
         {
-            menuRede.HitEnter(hh + " left the chat", "");
+            guiOnLine.HitEnter(hh + " left the chat", "");
         }
 
         Network.DestroyPlayerObjects(player);
@@ -75,7 +67,7 @@ public class SERVER : MonoBehaviour
     void OnPlayerConnected(NetworkPlayer player)
     {
 
-        menuRede.HitEnter("Player connected from: " + player.ipAddress + ":" + player.port, "");
+        guiOnLine.HitEnter("Player connected from: " + player.ipAddress + ":" + player.port, "");
 
 
     }
@@ -92,8 +84,9 @@ public class SERVER : MonoBehaviour
 
     void Awake()
     {
+        guiOnLine = GetComponent<GUIOnLine>();
+        gerente = GameObject.FindGameObjectWithTag("Manager").GetComponent<Manager>();
 
-        menuRede = GetComponent<MenuRede>();
     }
 
     void Start()
@@ -109,13 +102,14 @@ public class SERVER : MonoBehaviour
 
         //Debug.Log(timer);
 
-        if (contando)
+        if (gerente.gameState == GameState.playing)
         {
             timer += Time.deltaTime;
             Debug.Log(timer.ToString());
+           guiOnLine.UpdateTimeOnScreen(timer.ToString());
         }
 
-        if (timer >= menuRede.setUpTimer)
+        if (timer >= gerente.setUpTimer)
         {
             EndCount();
 
@@ -128,16 +122,16 @@ public class SERVER : MonoBehaviour
 
             if (!GameObject.Equals(winner, null))
             {
-                menuRede.HitEnter(winner.Name + " Venceu!!!", "");
+                guiOnLine.HitEnter(winner.Name + " Venceu!!!", "");
 
 
             }
             else
             {
-                menuRede.HitEnter("Ninguem venceu :(", "");
+                guiOnLine.HitEnter("Ninguem venceu :(", "");
             }
 
-            menuRede.ReiniciarJogoOnline();
+            ReiniciarJogoOnline();
 
             ilha.Begin();
             // gerenteRede.SetGameState(GameStateOnLine.clear);
@@ -148,8 +142,9 @@ public class SERVER : MonoBehaviour
 
     public void BeginCount()
     {
-        contando = true;
-        Debug.Log(contando.ToString());
+      
+        gerente.SetGameState(GameState.playing);
+       
 
         timer = 0;
 
@@ -158,11 +153,29 @@ public class SERVER : MonoBehaviour
 
     public void EndCount()
     {
-        contando = false;
+       
+        gerente.SetGameState(GameState.clear);
         timer = 0;
 
     }
 
+
+
+    public void ContinueCount(float timeServer)
+    {
+
+        timer = timeServer;
+        gerente.SetGameState(GameState.playing);
+
+
+    }
+
+
+    public void SetJogoTimeAtack(NetworkMessageInfo info)
+    {
+        GetComponent<NetworkView>().RPC("SetTimeAtack", RPCMode.All, timer);
+
+    }
 
 
 
@@ -177,6 +190,13 @@ public class SERVER : MonoBehaviour
 
     }
 
+    public void SetStageModeServer(string stage, string playerdestino, GameModeOnLine gamemode)
+    {
+        GetComponent<NetworkView>().RPC("SetStageMode", RPCMode.All, stage, playerdestino, gamemode);
+    }
+
+
+
     [RPC]
     bool TellServerOurName(String name, NetworkMessageInfo info)
     {
@@ -184,7 +204,7 @@ public class SERVER : MonoBehaviour
         {
             if (AddNewPlayer(name, info.sender))
             {
-                menuRede.HitEnter(name + " joined the chat", "");
+                guiOnLine.HitEnter(name + " joined the chat", "");
 
             }
 
@@ -194,14 +214,13 @@ public class SERVER : MonoBehaviour
     }
 
 
-
     public bool AddNewPlayer(String name, NetworkPlayer player)
     {
         Debug.Log(name);
         if (CheckNomeRepedido(name))
         {
             //Network.CloseConnection (info.sender, true);
-            menuRede.HitEnter("Nome Repetido Jogador mais recente será desconectado", name);
+            guiOnLine.HitEnter("Nome Repetido Jogador mais recente será desconectado", name);
 
             Network.CloseConnection(player, true);
             return false;
@@ -215,7 +234,7 @@ public class SERVER : MonoBehaviour
 
             playerList.Add(newPlayer);
 
-            menuRede.SetStageModeServer(Application.loadedLevelName, name, menuRede.gameMode.ToString());
+            SetStageModeServer(Application.loadedLevelName, name, gerente.gameModeOnLine);
             return true;
         }
 
@@ -293,7 +312,7 @@ public class SERVER : MonoBehaviour
             //if (returnFromServer != "")
             //{
             //    //ApplyGlobalChatTextSERVER ("", name + " Executed command: " + command + "Posicao=(" + possx + "," + possy + ")" + postesourox + "  " + postesouroy + "");
-            //    menu.HitEnter(returnFromServer, name);
+            //    menu.guiOnLine.HitEnter(returnFromServer, name);
 
             //}
             //networkView.RPC("ReceiveName", RPCMode.All, name, ilha.GetPlayer(info.sender).Tag);//avisar os clientes da mudança do player
@@ -314,18 +333,18 @@ public class SERVER : MonoBehaviour
 
             if (ilha.AddNewPlayer(nome, info.sender))
             {
-                menuRede.HitEnter(ilha.GetPlayer(nome).Name + " joined the Game", "");
-                menuRede.HitEnter("Bem vindo ao jogo", ilha.GetPlayer(nome).Name);
+                guiOnLine.HitEnter(ilha.GetPlayer(nome).Name + " joined the Game", "");
+                guiOnLine.HitEnter("Bem vindo ao jogo", ilha.GetPlayer(nome).Name);
 
 
                 Debug.Log(ilha.GetPlayer(nome).Tag);
 
-                menuRede.SetTagServer(ilha.GetPlayer(nome).Tag, ilha.GetPlayer(nome).Name);
+                SetTagServer(ilha.GetPlayer(nome).Tag, ilha.GetPlayer(nome).Name);
 
 
-                if (contando)
+                if ( gerente.gameState== GameState.playing)
                 {
-                    menuRede.SetJogoTimeAtack(info);
+                    SetJogoTimeAtack(info);
 
                 }
 
@@ -333,7 +352,7 @@ public class SERVER : MonoBehaviour
             }
             else
             {
-                menuRede.HitEnter("Voce nao pode se conectar ao jogo pois seu nome ja esta sendo usado", ilha.GetPlayer(nome).Name);
+                guiOnLine.HitEnter("Voce nao pode se conectar ao jogo pois seu nome ja esta sendo usado", ilha.GetPlayer(nome).Name);
 
             }
 
@@ -358,9 +377,9 @@ public class SERVER : MonoBehaviour
             {
 
 
-                menuRede.LeaveGameServer(hh);
+                LeaveGameServer(hh);
 
-                menuRede.HitEnter(hh + " left the Game", "");
+                guiOnLine.HitEnter(hh + " left the Game", "");
             }
 
         }
@@ -384,7 +403,7 @@ public class SERVER : MonoBehaviour
 
             if (returnFromServer != "")
             {
-                menuRede.HitEnter(returnFromServer, playername);
+                guiOnLine.HitEnter(returnFromServer, playername);
 
                 PlayerActionOnLine winner = ilha.GetWinner();
 
@@ -392,20 +411,14 @@ public class SERVER : MonoBehaviour
 
                 if (!GameObject.Equals(winner, null))
                 {
-                    menuRede.HitEnter(winner.Name + " Venceu!!!", "");
-                    menuRede.ReiniciarJogoOnline();
+                    guiOnLine.HitEnter(winner.Name + " Venceu!!!", "");
+                    ReiniciarJogoOnline();
 
                 }
 
             }
 
-            //PlayerRedeInstantiated.tag = tag;
-            //TextMesh nametext = PlayerRedeInstantiated.gameObject.GetComponentsInChildren<TextMesh>()[0];
-            //nametext.text = PlayerRedeInstantiated.tag;
-
-
-
-
+           
         }
 
 
@@ -537,7 +550,7 @@ public class Ilha2
 
             foreach (PlayerActionOnLine entry in playerListIlha)
             {
-                Debug.Log("flagggg"+entry.flag);
+                Debug.Log("flagggg" + entry.flag);
                 if (entry.flag)
                 {
                     return entry;
@@ -598,12 +611,12 @@ public class Ilha2
                 newPlayer.Tag = "player2";
             else
                 if (!CheckTagRepedido("player3"))
-                    newPlayer.Tag = "player3";
-                else
+                newPlayer.Tag = "player3";
+            else
                     if (!CheckTagRepedido("player4"))
-                        newPlayer.Tag = "player4";
-                    else
-                        newPlayer.Tag = "player1";
+                newPlayer.Tag = "player4";
+            else
+                newPlayer.Tag = "player1";
 
             newPlayer.Name = nome;
 
@@ -636,12 +649,12 @@ public class Ilha2
                 newPlayer.Tag = "player2";
             else
                 if (!CheckTagRepedido("player3"))
-                    newPlayer.Tag = "player3";
-                else
+                newPlayer.Tag = "player3";
+            else
                     if (!CheckTagRepedido("player4"))
-                        newPlayer.Tag = "player4";
-                    else
-                        newPlayer.Tag = "player1";
+                newPlayer.Tag = "player4";
+            else
+                newPlayer.Tag = "player1";
 
             newPlayer.Name = name;
 

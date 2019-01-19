@@ -65,22 +65,23 @@
     <Compile Include="Assets\Scripts\Bloco.cs" />
     <Compile Include="Assets\Scripts\ClearStage.cs" />
     <Compile Include="Assets\Scripts\Cogumelo.cs" />
+    <Compile Include="Assets\Scripts\EnemyGenerator.cs" />
     <Compile Include="Assets\Scripts\Enemys.cs" />
     <Compile Include="Assets\Scripts\Estrela.cs" />
     <Compile Include="Assets\Scripts\FireBall.cs" />
+    <Compile Include="Assets\Scripts\GUILocal.cs" />
     <Compile Include="Assets\Scripts\Manager.cs" />
-    <Compile Include="Assets\Scripts\MenuGUI.cs" />
     <Compile Include="Assets\Scripts\MenuLocal.cs" />
     <Compile Include="Assets\Scripts\Midle.cs" />
     <Compile Include="Assets\Scripts\OnLine\BandeiraOnline.cs" />
     <Compile Include="Assets\Scripts\OnLine\BlocoOnLine.cs" />
     <Compile Include="Assets\Scripts\OnLine\CLIENT.cs" />
-    <Compile Include="Assets\Scripts\OnLine\EnemyGenerator.cs" />
+    <Compile Include="Assets\Scripts\OnLine\EnemyGeneratorOnLine.cs" />
     <Compile Include="Assets\Scripts\OnLine\EnemysOnLine.cs" />
     <Compile Include="Assets\Scripts\OnLine\FireBallOnLine.cs" />
     <Compile Include="Assets\Scripts\OnLine\FlagMove.cs" />
+    <Compile Include="Assets\Scripts\OnLine\GUIOnLine.cs" />
     <Compile Include="Assets\Scripts\OnLine\Ilha.cs" />
-    <Compile Include="Assets\Scripts\OnLine\ManagerOnLine.cs" />
     <Compile Include="Assets\Scripts\OnLine\MenuRede.cs" />
     <Compile Include="Assets\Scripts\OnLine\PesOnLine.cs" />
     <Compile Include="Assets\Scripts\OnLine\PlacarOnLine.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Assets\Scripts\OnLine\SERVER.cs" />
     <Compile Include="Assets\Scripts\Pes.cs" />
     <Compile Include="Assets\Scripts\PlayerAction.cs" />
+    <Compile Include="Assets\Scripts\StageManager.cs" />
     <Compile Include="Assets\testes\testemovemario.cs" />
     <Reference Include="Assembly-UnityScript-firstpass">
       <HintPath>D:/Desktop2/Faculdades/PUCRS/Desenvolvimento de jogos/prog3D/Trabalhos/MarioBros2/Library/ScriptAssemblies/Assembly-UnityScript-firstpass.dll</HintPath>
