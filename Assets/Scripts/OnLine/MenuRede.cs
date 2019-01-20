@@ -227,11 +227,6 @@ public class MenuRede : MonoBehaviour
 
 
 
-    public void ReiniciarJogoOnline()
-    {
-        GetComponent<NetworkView>().RPC("ReiniciarJogo", RPCMode.All);
-    }
-
 
     [RPC]
     void SetStageMode(string stage, string playerdestino, GameModeOnLine gamemode)
@@ -278,10 +273,7 @@ public class MenuRede : MonoBehaviour
 
     }
 
-    public void SetTagServer(string tagPlayer, string playerdestino)
-    {
-        GetComponent<NetworkView>().RPC("SetTag", RPCMode.All, tagPlayer, playerdestino);
-    }
+  
 
 
 
@@ -293,12 +285,7 @@ public class MenuRede : MonoBehaviour
 
     }
 
-    public void LeaveGameServer(string playerdestino)
-    {
-
-        GetComponent<NetworkView>().RPC("LeaveGame", RPCMode.All, playerdestino);
-    }
-
+    
 
 
 

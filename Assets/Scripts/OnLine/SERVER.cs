@@ -85,7 +85,7 @@ public class SERVER : MonoBehaviour
     void Awake()
     {
         guiOnLine = GetComponent<GUIOnLine>();
-        gerente = GameObject.FindGameObjectWithTag("Manager").GetComponent<Manager>();
+        gerente = gameObject.GetComponentInParent<Manager>();
 
     }
 
@@ -131,7 +131,7 @@ public class SERVER : MonoBehaviour
                 guiOnLine.HitEnter("Ninguem venceu :(", "");
             }
 
-            ReiniciarJogoOnline();
+            GetComponent<NetworkView>().RPC("ReiniciarJogo", RPCMode.All);
 
             ilha.Begin();
             // gerenteRede.SetGameState(GameStateOnLine.clear);
@@ -339,8 +339,8 @@ public class SERVER : MonoBehaviour
 
                 Debug.Log(ilha.GetPlayer(nome).Tag);
 
-                SetTagServer(ilha.GetPlayer(nome).Tag, ilha.GetPlayer(nome).Name);
-
+              
+                GetComponent<NetworkView>().RPC("SetTag", RPCMode.All, ilha.GetPlayer(nome).Tag, ilha.GetPlayer(nome).Name);
 
                 if ( gerente.gameState== GameState.playing)
                 {
@@ -377,7 +377,8 @@ public class SERVER : MonoBehaviour
             {
 
 
-                LeaveGameServer(hh);
+               
+                GetComponent<NetworkView>().RPC("LeaveGame", RPCMode.All, hh);
 
                 guiOnLine.HitEnter(hh + " left the Game", "");
             }
@@ -412,7 +413,7 @@ public class SERVER : MonoBehaviour
                 if (!GameObject.Equals(winner, null))
                 {
                     guiOnLine.HitEnter(winner.Name + " Venceu!!!", "");
-                    ReiniciarJogoOnline();
+                    GetComponent<NetworkView>().RPC("ReiniciarJogo", RPCMode.All);
 
                 }
 

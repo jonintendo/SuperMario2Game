@@ -3,14 +3,14 @@ using System.Collections;
 using System;
 using System.Text.RegularExpressions;
 
-public class CLIENT : MenuRede
+public class CLIENT : MonoBehaviour
 {
 
-         
+    Manager gerente;
     void Awake()
     {
-       
 
+        gerente = gameObject.GetComponentInParent<Manager>();
 
     }
 

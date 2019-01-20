@@ -25,9 +25,8 @@ public class Manager : MonoBehaviour
 
     public GameStateNetwork gameStateNetwork { get; private set; }
 
-
-
     public PlayerRoupa roupa;
+    public GameObject player;
 
 
     //online

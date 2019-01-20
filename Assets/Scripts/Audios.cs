@@ -23,7 +23,7 @@ public class Audios : MonoBehaviour
 
     void Awake()
     {
-        gerente = GameObject.FindGameObjectWithTag("Manager").GetComponent<Manager>();
+        gerente = gameObject.GetComponentInParent<Manager>();
         gerente.OnStateChange += HandleOnStateChange4;
 
     }
