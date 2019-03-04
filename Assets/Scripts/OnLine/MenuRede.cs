@@ -42,11 +42,7 @@ public class MenuRede : MonoBehaviour
     }*/
 
 
-    void Start()
-    {
-
-
-    }
+    
 
     void Awake()
     {
@@ -61,12 +57,7 @@ public class MenuRede : MonoBehaviour
 
     }
 
-    void Update()
-    {
-       
-
-    }
-
+    
 
 
     public void HandleOnStateChange()
@@ -102,7 +93,7 @@ public class MenuRede : MonoBehaviour
                 }
 
 
-                Start();
+              
 
                 break;
 

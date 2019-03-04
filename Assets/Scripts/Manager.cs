@@ -13,12 +13,14 @@ public delegate void OnStateChangeHandler();
 public class Manager : MonoBehaviour
 {
 
-   
+    public GameObject menu;
+    public GameObject menurede;
 
     public event OnStateChangeHandler OnStateChange;
     public GameState gameState { get; private set; }
     string lastGameStage;
     public GameState lastGameState;
+         
 
     public event OnStateChangeHandler OnModeOnLineChange;
     public GameModeOnLine gameModeOnLine { get; private set; }
@@ -67,10 +69,10 @@ public class Manager : MonoBehaviour
         switch (gameStateNetwork)
         {
             case GameStateNetwork.local:
-                GameObject.FindGameObjectWithTag("MenuOnLine").active = false;
+                menurede.active = false;
                 break;
             case GameStateNetwork.online:
-                GameObject.FindGameObjectWithTag("Menu").active = false;
+                menu.active = false;
                 break;
 
         }
@@ -120,7 +122,9 @@ public class Manager : MonoBehaviour
 
     }
 
-    public void NextStage()
+
+
+        public void NextStage()
     {
 
         switch (Application.loadedLevelName)
@@ -192,6 +196,8 @@ public class Manager : MonoBehaviour
         {
             case "Opening":
                 lastGameStage = "Opening";
+                menurede.active = true;             
+                menu.active = true;
                 SetGameState(GameState.opening);
 
                 break;
