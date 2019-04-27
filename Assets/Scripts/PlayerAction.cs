@@ -193,7 +193,7 @@ public class PlayerAction : MonoBehaviour
                 {
 
                     star = false;
-                    transform.FindChild("Corpo").tag = "Corpo";
+                    transform.Find("Corpo").tag = "Corpo";
 
                 }
 
@@ -357,7 +357,7 @@ public class PlayerAction : MonoBehaviour
         timerInvencivel = 0;
         timeinvencivel = TimeInvencivel;
         star = true;
-        transform.FindChild("Corpo").tag = "estrela";
+        transform.Find("Corpo").tag = "estrela";
     }
 
 
