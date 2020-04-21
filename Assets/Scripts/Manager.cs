@@ -53,6 +53,7 @@ public class Manager : MonoBehaviour
 
     public void SetGameModeOnLine(GameModeOnLine gameModeOnLineq)
     {
+       
         gameModeOnLine = gameModeOnLineq;
 
         if (OnModeOnLineChange != null)
@@ -69,14 +70,14 @@ public class Manager : MonoBehaviour
         switch (gameStateNetwork)
         {
             case GameStateNetwork.local:
-                menurede.active = false;
+                menurede.SetActive(false);
                 break;
             case GameStateNetwork.online:
-                menu.active = false;
+                menu.SetActive(false);
                 break;
 
         }
-
+        Debug.Log(gameStateNetwork.ToString());
     }
 
 
